@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlphaBot — Akıllı Trading Sistemi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #04080f;
+  --bg2: #080e1a;
+  --bg3: #0d1525;
+  --surface: #111927;
+  --surface2: #172030;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8edf5;
+  --muted: #5a6a82;
+  --accent: #00d4aa;
+  --accent2: #0066ff;
+  --accent3: #ff6b35;
+  --green: #00d4aa;
+  --red: #ff4757;
+  --yellow: #ffd32a;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 48px;
+  background: rgba(4,8,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display:flex; gap:32px; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  border: 1px solid rgba(0,212,170,0.3);
+  padding: 5px 14px;
+  border-radius: 2px;
+  display:flex; align-items:center; gap:7px;
+}
+.nav-badge::before {
+  content:'';
+  width:6px; height:6px;
+  background: var(--accent);
+  border-radius:50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.4; transform:scale(0.8); }
+}
+
+/* ── SECTIONS ── */
+section { position:relative; z-index:1; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:flex-start;
+  padding: 120px 48px 80px;
+  position:relative;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display:flex; align-items:center; gap:12px;
+}
+.hero-eyebrow::before {
+  content:'';
+  width:32px; height:1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(52px, 8vw, 110px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -3px;
+  max-width: 900px;
+  margin-bottom: 32px;
+}
+.hero-title .line2 { color: var(--accent); display:block; }
+.hero-title .line3 { color: var(--muted); display:block; font-weight:400; }
+.hero-desc {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 480px;
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+.hero-ctas { display:flex; gap:16px; align-items:center; }
+.btn-primary {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 14px 28px;
+  border-radius: 2px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: #00f0c3; transform:translateY(-1px); }
+.btn-secondary {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  display:flex; align-items:center; gap:8px;
+  transition: color 0.2s;
+}
+.btn-secondary:hover { color: var(--text); }
+.btn-secondary::after { content:'→'; }
+
+/* Hero stats */
+.hero-stats {
+  position:absolute;
+  right: 48px; top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:3px;
+}
+.hero-stat-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 28px;
+  min-width: 180px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-stat-item::before {
+  content:'';
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+  background: var(--accent);
+}
+.stat-val {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ── TICKER TAPE ── */
+.ticker-wrap {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow:hidden;
+  padding: 12px 0;
+  position:relative; z-index:1;
+}
+.ticker {
+  display:flex; gap:48px;
+  animation: ticker 30s linear infinite;
+  width:max-content;
+}
+@keyframes ticker {
+  0% { transform:translateX(0); }
+  100% { transform:translateX(-50%); }
+}
+.tick-item {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  display:flex; align-items:center; gap:10px;
+  white-space:nowrap;
+}
+.tick-item .sym { color: var(--text); font-weight:500; }
+.tick-item .up { color: var(--green); }
+.tick-item .dn { color: var(--red); }
+
+/* ── LIVE SIGNALS ── */
+#signals {
+  padding: 100px 48px;
+}
+.section-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom: 48px;
+}
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--display);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.tg-badge {
+  display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #4db8ff;
+  border: 1px solid rgba(77,184,255,0.2);
+  padding: 8px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.tg-badge:hover { border-color: rgba(77,184,255,0.5); color:#7fcfff; }
+
+/* Telegram config panel */
+.tg-config {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display:grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+.tg-config label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display:block;
+  margin-bottom: 6px;
+}
+.tg-config input {
+  width:100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: 2px;
+  outline:none;
+  transition: border-color 0.2s;
+}
+.tg-config input:focus { border-color: var(--accent); }
+.tg-config input::placeholder { color: var(--muted); }
+.btn-fetch {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 11px 20px;
+  border-radius: 2px;
+  cursor:pointer;
+  font-weight:500;
+  white-space:nowrap;
+  transition: all 0.2s;
+}
+.btn-fetch:hover { background:#00f0c3; }
+.btn-fetch:disabled { background: var(--muted); cursor:not-allowed; }
+
+/* Signal cards */
+.signals-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 2px;
+}
+.signal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  position:relative;
+  overflow:hidden;
+  transition: border-color 0.2s;
+  animation: fadeIn 0.4s ease both;
+}
+.signal-card:hover { border-color: var(--border2); }
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.signal-card.buy::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--green); }
+.signal-card.sell::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--red); }
+.signal-card.info::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--yellow); }
+.sig-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.sig-pair {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.sig-dir {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.sig-dir.buy { background:rgba(0,212,170,0.12); color:var(--green); }
+.sig-dir.sell { background:rgba(255,71,87,0.12); color:var(--red); }
+.sig-dir.info { background:rgba(255,211,42,0.12); color:var(--yellow); }
+.sig-msg {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  border-left: 1px solid var(--border2);
+  padding-left: 10px;
+}
+.sig-meta {
+  display:flex; justify-content:space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Stats bar */
+.stats-bar {
+  display:grid;
+  grid-template-columns: repeat(4,1fr);
+  gap:2px;
+  margin-bottom: 24px;
+}
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+}
+.stat-box .val {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+.stat-box .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.val.green { color: var(--green); }
+.val.red   { color: var(--red); }
+
+/* Loading / empty */
+.signals-status {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 60px 20px;
+  border: 1px dashed var(--border2);
+  letter-spacing: 0.05em;
+}
+.signals-status span { color: var(--accent); }
+
+/* ── FLOW DIAGRAM ── */
+#flow {
+  padding: 100px 48px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.flow-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+/* Flow SVG wrapper */
+.flow-svg-wrap {
+  min-width: 900px;
+}
+
+/* ── FEATURES ── */
+#features {
+  padding: 100px 48px;
+}
+.features-grid {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 60px;
+}
+.feat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  transition: border-color 0.2s;
+}
+.feat-card:hover { border-color: var(--border2); }
+.feat-icon {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+.feat-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 10px;
+}
+.feat-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.feat-tags {
+  display:flex; flex-wrap:wrap; gap:6px;
+  margin-top: 16px;
+}
+.feat-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  border: 1px solid rgba(0,212,170,0.2);
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+/* ── STRATEGIES ── */
+#strategies {
+  padding: 100px 48px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.strat-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2px;
+  margin-top: 48px;
+}
+.strat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px 20px;
+  position:relative;
+  overflow:hidden;
+}
+.strat-card::after {
+  content: attr(data-wr);
+  position:absolute;
+  right: 16px; top: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+.strat-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+.strat-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.strat-bar-wrap {
+  margin-top: 14px;
+  height: 2px;
+  background: var(--border2);
+  border-radius: 1px;
+  overflow:hidden;
+}
+.strat-bar {
+  height:100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 1px;
+  transition: width 1s ease;
+}
+
+/* ── MARTINGALE CALC ── */
+#calculator {
+  padding: 100px 48px;
+}
+.calc-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+.calc-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px;
+}
+.calc-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display:block;
+}
+.calc-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 2px;
+  outline:none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.calc-input:focus { border-color: var(--accent); }
+.calc-table {
+  width:100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.calc-table th {
+  color: var(--muted);
+  font-weight: 400;
+  text-align: left;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.05em;
+}
+.calc-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.calc-table td:first-child { color: var(--muted); }
+.calc-table td.amount { color: var(--accent); font-weight: 500; }
+.calc-table td.loss { color: var(--red); }
+.calc-table tr.active-row td { background: rgba(0,212,170,0.05); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 60px 48px;
+  border-top: 1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+}
+.footer-logo {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.footer-logo span { color: var(--accent); }
+.footer-disclaimer {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  max-width: 360px;
+  text-align: right;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Alpha<span>Bot</span></div>
+  <div class="nav-links">
+    <a href="#signals">Sinyaller</a>
+    <a href="#flow">Akış</a>
+    <a href="#features">Özellikler</a>
+    <a href="#strategies">Stratejiler</a>
+    <a href="#calculator">Hesaplayıcı</a>
+  </div>
+  <div class="nav-badge" id="liveStatus">CANLI</div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow">v10.4 — Yapay Zeka Destekli</div>
+  <h1 class="hero-title">
+    Algoritmik
+    <span class="line2">Trading</span>
+    <span class="line3">Sistemi</span>
+  </h1>
+  <p class="hero-desc">
+    MetaTrader5 entegrasyonu, çoklu strateji motoru, martingale yönetimi
+    ve yapay zeka öğrenmesiyle otomatik sinyal üretimi.
+  </p>
+  <div class="hero-ctas">
+    <a href="#signals" class="btn-primary">Canlı Sinyaller</a>
+    <a href="#flow" class="btn-secondary">Nasıl Çalışır</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat-item">
+      <div class="stat-val" id="heroWR">—</div>
+      <div class="stat-label">Win Rate</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="stat-val" style="color:var(--accent2)">18+</div>
+      <div class="stat-label">Strateji</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="stat-val" style="color:var(--yellow)">24/7</div>
+      <div class="stat-label">Sürekli Tarama</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <!-- JS ile doldurulacak, iki kopya -->
+  </div>
+</div>
+
+<!-- LIVE SIGNALS -->
+<section id="signals">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Telegram Entegrasyonu</div>
+      <h2 class="section-title">Canlı Sinyaller</h2>
+    </div>
+    <a class="tg-badge" id="tgLink" href="#" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21.94 4.37a1.59 1.59 0 0 0-1.63-.22L3.06 10.9a1.6 1.6 0 0 0 .1 2.98l3.72 1.24 1.86 5.59a1.07 1.07 0 0 0 1.87.32l2.6-3.2 4.34 3.22a1.6 1.6 0 0 0 2.49-1L22 5.93a1.6 1.6 0 0 0-.06-.56Z" fill="#4db8ff"/></svg>
+      Telegram Kanalı
+    </a>
+  </div>
+
+  <!-- Config -->
+  <div class="tg-config" style="grid-template-columns:1fr auto;">
+    <div>
+      <label>Telegram Kanal Adı</label>
+      <input type="text" id="channelName" placeholder="@kanaladınız veya kanaladınız" value="binomosignalwin">
+    </div>
+    <button class="btn-fetch" id="fetchBtn" onclick="fetchSignals()">Sinyalleri Çek</button>
+  </div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:20px;padding:0 2px">
+    ℹ️ Public kanallar için token gerekmez — sadece kanal adını girin. Token güvenliğiniz korunur.
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-box">
+      <div class="val green" id="statWin">—</div>
+      <div class="lbl">Kazanç</div>
+    </div>
+    <div class="stat-box">
+      <div class="val red" id="statLoss">—</div>
+      <div class="lbl">Kayıp</div>
+    </div>
+    <div class="stat-box">
+      <div class="val" id="statTotal">—</div>
+      <div class="lbl">Toplam Sinyal</div>
+    </div>
+    <div class="stat-box">
+      <div class="val" id="statWR">—</div>
+      <div class="lbl">Win Rate</div>
+    </div>
+  </div>
+
+  <div id="signalsContainer">
+    <div class="signals-status">
+      Bot token ve Chat ID girerek <span>Telegram sinyallerini</span> çekin<br>
+      <small style="font-size:10px;margin-top:8px;display:block;opacity:0.5">Demo mod: token girmeden örnek verilerle başlayabilirsiniz</small>
+    </div>
+  </div>
+  <div style="margin-top:16px;text-align:center">
+    <button class="btn-secondary" style="background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--muted)" onclick="loadDemo()">→ Demo modunu dene</button>
+  </div>
+</section>
+
+<!-- FLOW DIAGRAM -->
+<section id="flow">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Sistem Mimarisi</div>
+      <h2 class="section-title">Bot Akış Diyagramı</h2>
+    </div>
+  </div>
+  <div class="flow-container">
+    <div class="flow-svg-wrap">
+<svg viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:720px">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.25)"/>
+    </marker>
+    <marker id="arrG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#00d4aa"/>
+    </marker>
+    <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ff4757"/>
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background label areas -->
+  <rect x="10" y="10" width="200" height="700" rx="4" fill="rgba(0,212,170,0.03)" stroke="rgba(0,212,170,0.08)" stroke-width="1"/>
+  <text x="110" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00d4aa" letter-spacing="2" opacity="0.6">VERİ KAYNAĞI</text>
+
+  <rect x="220" y="10" width="220" height="700" rx="4" fill="rgba(0,102,255,0.03)" stroke="rgba(0,102,255,0.08)" stroke-width="1"/>
+  <text x="330" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#0066ff" letter-spacing="2" opacity="0.6">ANALİZ MOTORU</text>
+
+  <rect x="450" y="10" width="220" height="700" rx="4" fill="rgba(255,107,53,0.03)" stroke="rgba(255,107,53,0.08)" stroke-width="1"/>
+  <text x="560" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ff6b35" letter-spacing="2" opacity="0.6">KARAR & FİLTRE</text>
+
+  <rect x="680" y="10" width="200" height="700" rx="4" fill="rgba(255,211,42,0.03)" stroke="rgba(255,211,42,0.08)" stroke-width="1"/>
+  <text x="780" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ffd32a" letter-spacing="2" opacity="0.6">EXECUTION</text>
+
+  <rect x="890" y="10" width="200" height="700" rx="4" fill="rgba(255,71,87,0.03)" stroke="rgba(255,71,87,0.08)" stroke-width="1"/>
+  <text x="990" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ff4757" letter-spacing="2" opacity="0.6">ÇIKTI</text>
+
+  <!-- ══ NODES ══ -->
+
+  <!-- MT5 Feed -->
+  <g>
+    <rect x="30" y="55" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
+    <text x="110" y="76" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">MetaTrader 5</text>
+    <text x="110" y="93" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">OHLCV / Tick Verisi</text>
+  </g>
+
+  <!-- Forex Factory -->
+  <g>
+    <rect x="30" y="130" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
+    <text x="110" y="151" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Forex Factory</text>
+    <text x="110" y="168" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">Ekonomik Takvim</text>
+  </g>
+
+  <!-- Crypto Feed -->
+  <g>
+    <rect x="30" y="205" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
+    <text x="110" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Crypto Feed</text>
+    <text x="110" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">BTC/ETH vb.</text>
+  </g>
+
+  <!-- ── ANALYSIS ENGINE ── -->
+
+  <!-- Scalp Strategies -->
+  <g>
+    <rect x="240" y="55" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
+    <text x="330" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Scalp Stratejileri</text>
+    <text x="330" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">RSI · EMA · Bollinger · MACD</text>
+    <text x="330" y="100" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stoch · CCI · ATR · Ichimoku</text>
+  </g>
+
+  <!-- Swing Strategies -->
+  <g>
+    <rect x="240" y="130" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
+    <text x="330" y="148" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Swing Stratejileri</text>
+    <text x="330" y="163" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">S/D Zone · Fib · Pattern</text>
+    <text x="330" y="175" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Price Action · SR Seviyeleri</text>
+  </g>
+
+  <!-- AI Engine -->
+  <g>
+    <rect x="240" y="205" width="180" height="50" rx="2" fill="#0d1525" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="330" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme Motoru</text>
+    <text x="330" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Strateji Ağırlık Optimizasyonu</text>
+  </g>
+
+  <!-- Signal Aggregator -->
+  <g>
+    <rect x="240" y="280" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
+    <text x="330" y="300" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Sinyal Birleştirici</text>
+    <text x="330" y="316" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Çoğunluk Oylaması</text>
+    <text x="330" y="328" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlıklı Skor Hesaplama</text>
+  </g>
+
+  <!-- ── DECISION FILTERS ── -->
+
+  <!-- Session Filter -->
+  <g>
+    <rect x="468" y="55" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
+    <text x="560" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Session Filtresi</text>
+    <text x="560" y="89" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">London · NY · Tokyo</text>
+  </g>
+
+  <!-- News Filter -->
+  <g>
+    <rect x="468" y="115" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
+    <text x="560" y="133" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Haber Filtresi</text>
+    <text x="560" y="149" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Yüksek etkili haberler blok</text>
+  </g>
+
+  <!-- Streak Protection -->
+  <g>
+    <rect x="468" y="175" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
+    <text x="560" y="193" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Streak Koruması</text>
+    <text x="560" y="209" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Üst üste kayıp limiti</text>
+  </g>
+
+  <!-- Daily Limit -->
+  <g>
+    <rect x="468" y="235" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
+    <text x="560" y="253" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Günlük Limit</text>
+    <text x="560" y="269" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max kayıp / Kar hedefi</text>
+  </g>
+
+  <!-- Concurrent Check -->
+  <g>
+    <rect x="468" y="295" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
+    <text x="560" y="313" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Eşzamanlı Kontrol</text>
+    <text x="560" y="329" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max açık işlem sayısı</text>
+  </g>
+
+  <!-- DECISION diamond -->
+  <g>
+    <polygon points="560,395 620,440 560,485 500,440" fill="#0d1525" stroke="#ffd32a" stroke-width="1.5"/>
+    <text x="560" y="436" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">KARAR</text>
+    <text x="560" y="451" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ffd32a">ONAY?</text>
+    <!-- YES/NO labels -->
+    <text x="640" y="436" font-family="DM Mono,monospace" font-size="9" fill="#00d4aa">EVET</text>
+    <text x="530" y="506" font-family="DM Mono,monospace" font-size="9" fill="#ff4757">HAYIR</text>
+  </g>
+
+  <!-- ── EXECUTION ── -->
+
+  <!-- Martingale -->
+  <g>
+    <rect x="698" y="390" width="165" height="50" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
+    <text x="780" y="411" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Martingale Hesapla</text>
+    <text x="780" y="428" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stake x [1·1.5·3·6.5·13·27]</text>
+    <text x="780" y="440" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Seviye belirle</text>
+  </g>
+
+  <!-- Deriv Execution -->
+  <g>
+    <rect x="698" y="460" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
+    <text x="780" y="478" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Deriv Selenium</text>
+    <text x="780" y="494" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Otomatik işlem girişi</text>
+  </g>
+
+  <!-- MT5 Direct -->
+  <g>
+    <rect x="698" y="520" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
+    <text x="780" y="538" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">MT5 Direct Trade</text>
+    <text x="780" y="554" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">SL / TP otomatik</text>
+  </g>
+
+  <!-- ── OUTPUT ── -->
+
+  <!-- Telegram Signal -->
+  <g>
+    <rect x="908" y="390" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/>
+    <text x="990" y="408" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Telegram Sinyali</text>
+    <text x="990" y="424" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Anlık bildirim gönder</text>
+  </g>
+
+  <!-- Result tracking -->
+  <g>
+    <rect x="908" y="450" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/>
+    <text x="990" y="468" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Sonuç Takibi</text>
+    <text x="990" y="484" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">WIN / LOSS kaydı</text>
+  </g>
+
+  <!-- Learning Loop -->
+  <g>
+    <rect x="908" y="510" width="165" height="42" rx="2" fill="#0d1525" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="990" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme</text>
+    <text x="990" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlık güncelle → loop</text>
+  </g>
+
+  <!-- SKIP (NO branch) -->
+  <g>
+    <rect x="468" y="510" width="185" height="42" rx="2" fill="#111927" stroke="#ff4757" stroke-width="1"/>
+    <text x="560" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff4757" font-weight="500">Sinyal Atla</text>
+    <text x="560" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Cooldown bekleme süresi</text>
+  </g>
+
+  <!-- ══ ARROWS ══ -->
+  <!-- Data → Analysis -->
+  <line x1="190" y1="80" x2="238" y2="80" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
+  <line x1="190" y1="155" x2="238" y2="155" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
+  <line x1="190" y1="230" x2="238" y2="230" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
+
+  <!-- Analysis → Aggregator -->
+  <line x1="330" y1="105" x2="330" y2="278" stroke="rgba(0,102,255,0.3)" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="350" y1="180" x2="350" y2="278" stroke="rgba(0,102,255,0.3)" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="310" y1="255" x2="310" y2="278" stroke="rgba(122,60,237,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- Aggregator → Filters (via vertical then horizontal) -->
+  <line x1="420" y1="305" x2="466" y2="76" stroke="rgba(0,102,255,0.25)" stroke-width="1" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+  <!-- Filters → Decision -->
+  <line x1="560" y1="337" x2="560" y2="393" stroke="rgba(255,107,53,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Decision YES → Martingale -->
+  <line x1="620" y1="440" x2="696" y2="415" stroke="#00d4aa" stroke-width="1.5" marker-end="url(#arrG)"/>
+
+  <!-- Decision NO → Skip -->
+  <line x1="560" y1="485" x2="560" y2="508" stroke="#ff4757" stroke-width="1.5" marker-end="url(#arrR)"/>
+
+  <!-- Martingale → Execution -->
+  <line x1="780" y1="440" x2="780" y2="458" stroke="rgba(255,211,42,0.5)" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="780" y1="502" x2="780" y2="518" stroke="rgba(255,211,42,0.5)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- Execution → Output -->
+  <line x1="863" y1="415" x2="906" y2="415" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="863" y1="470" x2="906" y2="470" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- Result → Learning -->
+  <line x1="990" y1="492" x2="990" y2="508" stroke="rgba(122,60,237,0.5)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- Learning → AI Engine (feedback loop) -->
+  <path d="M990,552 Q990,620 330,620 Q330,560 330,332" fill="none" stroke="rgba(122,60,237,0.3)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <!-- Cooldown loop back -->
+  <path d="M560,552 Q560,600 200,600 Q200,290 238,290" fill="none" stroke="rgba(255,71,87,0.2)" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr)"/>
+
+  <!-- Loop label -->
+  <text x="540" y="620" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#a78bfa" opacity="0.6">AI GERİ BESLEMESİ</text>
+  <text x="200" y="615" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#ff4757" opacity="0.4">TEKRAR</text>
+</svg>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-eyebrow">Özellikler</div>
+  <h2 class="section-title">Ne Yapabilir?</h2>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Çoklu Strateji Motoru</div>
+      <div class="feat-desc">RSI, EMA, Bollinger Bands, MACD, Ichimoku, Stochastic, CCI, ATR ve daha fazlası eşzamanlı çalışır. Strateji oylaması ile en güçlü sinyal seçilir.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">RSI</span><span class="feat-tag">MACD</span><span class="feat-tag">Ichimoku</span><span class="feat-tag">BB</span><span class="feat-tag">EMA</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🧠</div>
+      <div class="feat-title">AI Öğrenme Motoru</div>
+      <div class="feat-desc">Her 20 işlemde bir otomatik analiz yapar. Düşük performanslı stratejiler kapanır, yüksek win rate'li stratejilerin ağırlığı artırılır.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">Adaptif</span><span class="feat-tag">Ağırlık Opt.</span><span class="feat-tag">GPT Raporu</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Martingale Sistemi</div>
+      <div class="feat-desc">6 kademeli akıllı martingale. Kayıp serilerinde stake otomatik güncellenir: 1x → 1.5x → 3x → 6.5x → 13x → 27x çarpanlarıyla.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">6 Kademe</span><span class="feat-tag">Otomatik</span><span class="feat-tag">Ayarlanabilir</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">Risk Yönetimi</div>
+      <div class="feat-desc">Günlük kayıp limiti, günlük kar hedefi, streak koruması ve eşzamanlı işlem sınırı. Hesabınızı korumak için çok katmanlı güvenlik.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">Günlük Limit</span><span class="feat-tag">Streak Guard</span><span class="feat-tag">DD Kontrolü</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📰</div>
+      <div class="feat-title">Haber Filtresi</div>
+      <div class="feat-desc">Forex Factory'den ekonomik takvimi otomatik çeker. Yüksek etkili haberler öncesi ve sonrası belirli dakika işlem durdurulur.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">Forex Factory</span><span class="feat-tag">Otomatik</span><span class="feat-tag">±5dk</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📡</div>
+      <div class="feat-title">Telegram Entegrasyonu</div>
+      <div class="feat-desc">Her sinyal anlık Telegram mesajı olarak gelir. Win/loss sonuçları, günlük PnL özeti ve AI raporları otomatik paylaşılır.</div>
+      <div class="feat-tags">
+        <span class="feat-tag">Anlık Bildirim</span><span class="feat-tag">PnL Raporu</span><span class="feat-tag">AI Analiz</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRATEGIES -->
+<section id="strategies">
+  <div class="section-eyebrow">Strateji Portföyü</div>
+  <h2 class="section-title">18+ Aktif Strateji</h2>
+  <div class="strat-grid" id="stratGrid"></div>
+</section>
+
+<!-- MARTINGALE CALCULATOR -->
+<section id="calculator">
+  <div class="section-eyebrow">İnteraktif Araç</div>
+  <h2 class="section-title">Martingale Hesaplayıcı</h2>
+  <div class="calc-grid">
+    <div class="calc-panel">
+      <label class="calc-label">Başlangıç Stake ($)</label>
+      <input class="calc-input" type="number" id="baseStake" value="34" min="1" oninput="calcMartingale()">
+      <label class="calc-label">Açık Kazanma Oranı (%)</label>
+      <input class="calc-input" type="number" id="winRate" value="58" min="1" max="99" oninput="calcMartingale()">
+      <label class="calc-label" style="margin-top:8px">Max Kayıp Riski</label>
+      <div id="maxRisk" style="font-family:var(--mono);font-size:22px;font-weight:500;color:var(--red);margin-top:4px">—</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px">6 kademeli toplam kayıp</div>
+    </div>
+    <div class="calc-panel">
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Kademe</th>
+            <th>Çarpan</th>
+            <th>Stake</th>
+            <th>Kümülatif Kayıp</th>
+            <th>Bu kademede kazanç</th>
+          </tr>
+        </thead>
+        <tbody id="calcBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Alpha<span>Bot</span></div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px">v10.4 — MT5 + Deriv + AI</div>
+  </div>
+  <div class="footer-disclaimer">
+    Bu site yalnızca bilgilendirme amaçlıdır. Geçmiş performans gelecek sonuçları garanti etmez.
+    Finansal işlemler risk içerir. Yatırım kararlarınızı kendi sorumluluğunuzda alın.
+  </div>
+</footer>
+
+<script>
+// ── TICKER DATA ──
+const pairs = [
+  {sym:'EUR/USD', val:'1.0842', chg:'+0.12%', up:true},
+  {sym:'GBP/USD', val:'1.2714', chg:'-0.08%', up:false},
+  {sym:'USD/JPY', val:'149.23', chg:'+0.31%', up:true},
+  {sym:'AUD/USD', val:'0.6521', chg:'-0.15%', up:false},
+  {sym:'USD/CHF', val:'0.8934', chg:'+0.07%', up:true},
+  {sym:'EUR/GBP', val:'0.8528', chg:'+0.03%', up:true},
+  {sym:'NZD/USD', val:'0.5987', chg:'-0.22%', up:false},
+  {sym:'USD/CAD', val:'1.3612', chg:'+0.11%', up:true},
+  {sym:'BTC/USD', val:'67,240', chg:'+1.84%', up:true},
+  {sym:'ETH/USD', val:'3,512', chg:'+2.10%', up:true},
+  {sym:'XAU/USD', val:'2,318', chg:'-0.34%', up:false},
+];
+
+function buildTicker() {
+  const t = document.getElementById('ticker');
+  const all = [...pairs, ...pairs]; // iki kopya
+  t.innerHTML = all.map(p => `
+    <div class="tick-item">
+      <span class="sym">${p.sym}</span>
+      <span>${p.val}</span>
+      <span class="${p.up?'up':'dn'}">${p.chg}</span>
+    </div>
+  `).join('');
+}
+buildTicker();
+
+// ── STRATEGIES ──
+const strategies = [
+  {name:'rsi_signal',     desc:'RSI aşırı alım/satım bölgeleri', wr:62},
+  {name:'ema_cross',      desc:'Hızlı/yavaş EMA kesişimi', wr:58},
+  {name:'macd_signal',    desc:'MACD histogram divergence', wr:55},
+  {name:'bb_breakout',    desc:'Bollinger Band sıkışma kırılımı', wr:60},
+  {name:'stoch_signal',   desc:'Stochastic %K/%D kesişimi', wr:54},
+  {name:'cci_extreme',    desc:'CCI ±100 seviyeleri', wr:53},
+  {name:'atr_breakout',   desc:'ATR tabanlı volatilite kırılımı', wr:57},
+  {name:'ichimoku_cloud', desc:'Kumo bulut geçişi + TK', wr:61},
+  {name:'sr_bounce',      desc:'S/R seviyelerinden geri dönüş', wr:64},
+  {name:'fib_retracement',desc:'Fibonacci geri çekilme seviyeleri', wr:59},
+  {name:'sd_zone',        desc:'Supply/Demand bölgesi tepkisi', wr:66},
+  {name:'engulf_pattern', desc:'Engulfing mum formasyonu', wr:56},
+  {name:'pin_bar',        desc:'Pin bar ters çevirme sinyali', wr:58},
+  {name:'doji_signal',    desc:'Doji belirsizlik + bağlam', wr:52},
+  {name:'news_trade',     desc:'Yüksek etkili haber işlemi', wr:49},
+  {name:'crypto_loop',    desc:'Kripto teknik tarama döngüsü', wr:55},
+  {name:'scalp_loop',     desc:'Hızlı scalp ana döngüsü', wr:60},
+  {name:'swing_loop',     desc:'Orta vadeli swing ana döngüsü', wr:63},
+];
+
+function buildStrats() {
+  const g = document.getElementById('stratGrid');
+  g.innerHTML = strategies.map(s => `
+    <div class="strat-card" data-wr="${s.wr}%">
+      <div class="strat-name">${s.name}</div>
+      <div class="strat-desc">${s.desc}</div>
+      <div class="strat-bar-wrap">
+        <div class="strat-bar" style="width:${s.wr}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+buildStrats();
+
+// ── MARTINGALE CALC ──
+const MULTIPLIERS = [1.0, 1.5, 3.0, 6.5, 13.0, 27.0];
+function calcMartingale() {
+  const base = parseFloat(document.getElementById('baseStake').value) || 34;
+  const wr   = parseFloat(document.getElementById('winRate').value) / 100 || 0.58;
+  const stakes = MULTIPLIERS.map(m => Math.max(1, Math.round(base * m)));
+  let cumLoss = 0;
+  let rows = '';
+  for (let i = 0; i < stakes.length; i++) {
+    const stake = stakes[i];
+    const win   = Math.round(stake * 0.8);
+    const prob  = Math.pow(1-wr, i) * wr * 100;
+    rows += `<tr class="${i===0?'active-row':''}">
+      <td>${i+1}</td>
+      <td>${MULTIPLIERS[i]}x</td>
+      <td class="amount">$${stake}</td>
+      <td class="loss">-$${cumLoss}</td>
+      <td style="color:var(--green)">+$${win}</td>
+    </tr>`;
+    cumLoss += stake;
+  }
+  document.getElementById('calcBody').innerHTML = rows;
+  document.getElementById('maxRisk').textContent = `-$${cumLoss}`;
+}
+calcMartingale();
+
+// ── TELEGRAM SIGNAL FETCHER ──
+function parseSignal(text) {
+  const lc = text.toLowerCase();
+  let type = 'info', pair = '', direction = '', extra = '';
+
+  // ── Direction detection (Binomo/Binary format + genel) ──
+  const isBuy  = /📈|⬆️|🔼|\bcall\b|\blong\b|\bbuy\b|yüksel|yukarı|above|higher/i.test(text);
+  const isSell = /📉|⬇️|🔽|\bput\b|\bshort\b|\bsell\b|düş|aşağı|below|lower/i.test(text);
+
+  if (isBuy)  { direction = 'CALL'; type = 'buy'; }
+  if (isSell) { direction = 'PUT';  type = 'sell'; }
+
+  // Win/loss override (result mesajları)
+  const isWin  = /✅|🏆|win|kazanç|kazandı|profit|başarı/i.test(text);
+  const isLoss = /❌|💔|loss|kayıp|kaybetti|zarar/i.test(text);
+  if (isWin && !isBuy && !isSell)  { type = 'buy'; }
+  if (isLoss && !isBuy && !isSell) { type = 'sell'; }
+
+  // ── Pair extraction ──
+  // Önce slash'lı format: EUR/USD, BTC/USDT
+  let pairMatch = text.match(/\b([A-Z]{2,6})[\/-]([A-Z]{2,6})\b/);
+  if (pairMatch) {
+    pair = pairMatch[0].toUpperCase();
+  } else {
+    // Bitişik format: EURUSD, XAUUSD, vb.
+    const concat = text.match(/\b(EUR|GBP|AUD|NZD|USD|CAD|CHF|JPY|BTC|ETH|XAU|XAG)(USD|EUR|GBP|JPY|CAD|CHF|USDT|AUD)\b/i);
+    if (concat) {
+      pair = concat[0].slice(0,3).toUpperCase() + '/' + concat[0].slice(3).toUpperCase();
+    }
+  }
+  // Fallback keyword eşleştirme
+  if (!pair) {
+    if (/bitcoin|\bbtc\b/i.test(text))  pair = 'BTC/USD';
+    else if (/ethereum|\beth\b/i.test(text)) pair = 'ETH/USD';
+    else if (/gold|xauusd|\bxau\b/i.test(text)) pair = 'XAU/USD';
+    else if (/eurusd|eur\/usd/i.test(text)) pair = 'EUR/USD';
+    else if (/gbpusd|gbp\/usd/i.test(text)) pair = 'GBP/USD';
+    else if (/usdjpy|usd\/jpy/i.test(text)) pair = 'USD/JPY';
+  }
+
+  // Extra info: süre, expiry, OTC vb.
+  const expiry = text.match(/(\d+)\s*(min|dk|m|dakika|minute)/i);
+  if (expiry) extra = expiry[1] + 'dk';
+  const otc = /OTC/i.test(text);
+  if (otc) extra += (extra?' · ':'') + 'OTC';
+
+  if (!pair) pair = 'SİNYAL';
+
+  return { type, pair, direction, extra };
+}
+
+let stats = { win:0, loss:0, total:0 };
+
+function renderSignals(messages) {
+  const container = document.getElementById('signalsContainer');
+  if (!messages || messages.length === 0) {
+    container.innerHTML = '<div class="signals-status">Mesaj bulunamadı. Chat ID ve token doğru mu?</div>';
+    return;
+  }
+
+  stats = { win:0, loss:0, total:0 };
+  let cards = '';
+
+  messages.slice().reverse().forEach((m, i) => {
+    const text = m.message?.text || m.channel_post?.text || '';
+    if (!text || text.length < 5) return;
+    const parsed = parseSignal(text);
+    stats.total++;
+    if (parsed.type === 'buy') stats.win++;
+    if (parsed.type === 'sell') stats.loss++;
+
+    const date = new Date((m.message?.date || m.channel_post?.date || 0) * 1000);
+    const timeStr = date.toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
+    const dateStr = date.toLocaleDateString('tr-TR', {day:'2-digit',month:'2-digit'});
+
+    cards += `
+      <div class="signal-card ${parsed.type}" style="animation-delay:${i*0.04}s">
+        <div class="sig-top">
+          <div class="sig-pair">${parsed.pair}${parsed.extra ? '<span style="font-size:11px;font-family:var(--mono);color:var(--muted);font-weight:400;margin-left:8px">'+parsed.extra+'</span>' : ''}</div>
+          ${parsed.direction ? `<span class="sig-dir ${parsed.type}">${parsed.direction}</span>` : '<span class="sig-dir info">INFO</span>'}
+        </div>
+        <div class="sig-msg">${text.substring(0, 160)}${text.length>160?'…':''}</div>
+        <div class="sig-meta">
+          <span>${dateStr} ${timeStr}</span>
+          <span style="color:var(--accent);opacity:0.6">#${stats.total}</span>
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = `<div class="signals-grid">${cards || '<div class="signals-status">Sinyal formatında mesaj bulunamadı</div>'}</div>`;
+
+  const wr = stats.total > 0 ? Math.round((stats.win/stats.total)*100) : 0;
+  document.getElementById('statWin').textContent   = stats.win;
+  document.getElementById('statLoss').textContent  = stats.loss;
+  document.getElementById('statTotal').textContent = stats.total;
+  document.getElementById('statWR').textContent    = wr + '%';
+  document.getElementById('heroWR').textContent    = wr + '%';
+}
+
+async function fetchSignals() {
+  let channel = document.getElementById('channelName').value.trim();
+  const btn   = document.getElementById('fetchBtn');
+
+  if (!channel) { alert('Kanal adı girin'); return; }
+  channel = channel.replace(/^@/, ''); // @ işaretini kaldır
+
+  // Telegram kanal linkini güncelle
+  document.getElementById('tgLink').href = `https://t.me/${channel}`;
+
+  btn.disabled = true;
+  btn.textContent = 'Çekiliyor...';
+  document.getElementById('signalsContainer').innerHTML =
+    '<div class="signals-status">Telegram kanalından sinyaller çekiliyor<span>...</span></div>';
+
+  try {
+    // Public kanallar için RSS feed (token gerektirmez, tamamen güvenli)
+    const rssUrl = `https://rsshub.app/telegram/channel/${channel}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+
+    const res  = await fetch(proxyUrl);
+    const data = await res.json();
+
+    if (!data.contents) throw new Error('Kanal verisi alınamadı');
+
+    // RSS XML parse et
+    const parser = new DOMParser();
+    const xml    = parser.parseFromString(data.contents, 'text/xml');
+    const items  = Array.from(xml.querySelectorAll('item'));
+
+    if (items.length === 0) throw new Error('Mesaj bulunamadı. Kanal adını kontrol edin.');
+
+    const messages = items.map(item => {
+      const title = item.querySelector('title')?.textContent || '';
+      const desc  = item.querySelector('description')?.textContent || '';
+      // HTML tag'leri temizle
+      const text  = (title + ' ' + desc).replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim();
+      const pubDate = item.querySelector('pubDate')?.textContent || '';
+      const date = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : Math.floor(Date.now()/1000);
+      return { message: { text, date } };
+    });
+
+    renderSignals(messages);
+
+  } catch (e) {
+    // Fallback: t.me/s/ public preview scrape
+    try {
+      const previewUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://t.me/s/${channel}`)}`;
+      const res2  = await fetch(previewUrl);
+      const data2 = await res2.json();
+
+      if (!data2.contents) throw new Error('Kanal erişilemedi');
+
+      const parser2 = new DOMParser();
+      const doc     = parser2.parseFromString(data2.contents, 'text/html');
+      const posts   = Array.from(doc.querySelectorAll('.tgme_widget_message_text'));
+      const times   = Array.from(doc.querySelectorAll('.tgme_widget_message_date time'));
+
+      if (posts.length === 0) throw new Error('Mesaj parse edilemedi');
+
+      const messages2 = posts.map((p, i) => {
+        const text = p.textContent?.trim() || '';
+        const dateStr = times[i]?.getAttribute('datetime') || '';
+        const date = dateStr ? Math.floor(new Date(dateStr).getTime()/1000) : Math.floor(Date.now()/1000) - i*300;
+        return { message: { text, date } };
+      });
+
+      renderSignals(messages2);
+
+    } catch (e2) {
+      document.getElementById('signalsContainer').innerHTML = `
+        <div class="signals-status" style="color:var(--red)">
+          Kanal çekilemedi: ${e2.message}<br>
+          <small style="opacity:0.6;font-size:10px;margin-top:8px;display:block">
+            Kanal adını doğrulayın ve kanalın public olduğundan emin olun.<br>
+            Demo verilerini görmek için aşağıdaki butonu kullanın.
+          </small>
+        </div>`;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sinyalleri Çek';
+  }
+}
+
+// ── DEMO MODE ──
+function loadDemo() {
+  const demoMessages = [
+    { message: { text: '📈 EUR/USD CALL ✅ | RSI: 28 | BB Alt | EMA Kesişim\nStake: $34 | Süre: 5dk\nStrateji: rsi_signal + bb_breakout', date: Date.now()/1000 - 300 } },
+    { message: { text: '📉 GBP/USD PUT ✅ | MACD Divergence | Stoch: 82\nStake: $34 | Süre: 5dk\nStrateji: macd_signal + stoch_signal', date: Date.now()/1000 - 900 } },
+    { message: { text: '📈 XAU/USD CALL ❌ | Ichimoku Bulut Geçişi\nStake: $51 | Martingale Lvl 2\nSonuç: -$51', date: Date.now()/1000 - 1800 } },
+    { message: { text: '📈 GBP/USD BUY ✅ | SR Bounce + Fib 0.618\nStake: $153 | Martingale Lvl 3\nStrateji: sr_bounce + fib_retracement', date: Date.now()/1000 - 2700 } },
+    { message: { text: '⚠️ Haber Filtresi Aktif — USD NFP verisi 15:30\nİşlem 20 dakika durduruldu', date: Date.now()/1000 - 3600 } },
+    { message: { text: '📉 EUR/GBP SELL ✅ | S/D Zone + Pin Bar\nStake: $34 | Süre: 15dk\nStrateji: sd_zone + pin_bar', date: Date.now()/1000 - 4500 } },
+    { message: { text: '🧠 AI Öğrenme Raporu:\n✅ sd_zone → Ağırlık: 1.4 (↑)\n✅ sr_bounce → Ağırlık: 1.3 (↑)\n❌ doji_signal → Kapatıldı (WR: 41%)', date: Date.now()/1000 - 5400 } },
+    { message: { text: '📈 BTC/USD LONG ✅ | ATR Breakout + BB\nStake: $34 | Kripto Loop\nStrateji: atr_breakout', date: Date.now()/1000 - 6300 } },
+    { message: { text: '📊 Günlük PnL Özeti:\n✅ Kazanç: 6 | ❌ Kayıp: 2\nWin Rate: 75% | Net: +$112\nStreak: 0 | Seviye: 1', date: Date.now()/1000 - 7200 } },
+    { message: { text: '📈 USD/JPY CALL ✅ | EMA 9/21 Cross + RSI 35\nStake: $34 | Süre: 5dk\nStrateji: ema_cross + rsi_signal', date: Date.now()/1000 - 8100 } },
+  ];
+  renderSignals(demoMessages);
+}
+
+// Auto-fetch real channel on start, fallback to demo
+window.addEventListener('DOMContentLoaded', () => {
+  // Set telegram link
+  document.getElementById('tgLink').href = 'https://t.me/binomosignalwin';
+  // Try real fetch first, demo as fallback
+  setTimeout(async () => {
+    try {
+      await fetchSignals();
+    } catch(e) {
+      loadDemo();
+    }
+  }, 500);
+});
+</script>
+</body>
+</html>
