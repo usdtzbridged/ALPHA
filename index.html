@@ -1391,6 +1391,7 @@ async function fetchSignals() {
     // 3) State sıfırla
     apiBaseGlobal = apiBase;
     targetChatId  = chatData.result.id;
+    console.log('[Init] targetChatId =', targetChatId, 'type=', typeof targetChatId);
     allMessages   = [];
     nextOffset    = 0;
     initialized   = true;
@@ -1414,11 +1415,10 @@ async function fetchSignals() {
 async function pollUpdates() {
   if (!initialized) return;
 
-  const url = `${apiBaseGlobal}/getUpdates?limit=100&offset=${nextOffset}&allowed_updates=${encodeURIComponent('["channel_post","message"]')}`;
+  const url = `${apiBaseGlobal}/getUpdates?limit=100&offset=${nextOffset}`;
   const data = await (await fetch(url)).json();
 
   if (!data.ok) {
-    // Webhook çakışması tekrar olursa
     if (data.description?.includes('webhook')) {
       await fetch(`${apiBaseGlobal}/deleteWebhook?drop_pending_updates=false`);
       return;
@@ -1427,15 +1427,21 @@ async function pollUpdates() {
   }
 
   const updates = data.result;
+  console.log(`[Poll] ${updates.length} update, offset=${nextOffset}, hedef=${targetChatId}`);
+
   if (updates.length > 0) {
-    // Bir sonraki çekişte bu mesajları tekrar almamak için offset ilerlet
     nextOffset = updates[updates.length - 1].update_id + 1;
 
-    // Bu kanala ait olanları filtrele
+    const targetIdStr = String(targetChatId);
     const fresh = updates.filter(u => {
-      const post = u.channel_post || u.message;
-      return post && post.chat?.id === targetChatId;
+      const post = u.channel_post || u.message || u.edited_channel_post;
+      if (!post) return false;
+      const match = String(post.chat?.id) === targetIdStr;
+      if (!match) console.log(`[Poll] Eşleşmedi: chat_id=${post.chat?.id}, hedef=${targetIdStr}`);
+      return match;
     });
+
+    console.log(`[Poll] ${fresh.length} sinyal eşleşti`);
 
     if (fresh.length > 0) {
       allMessages = [...allMessages, ...fresh];
@@ -1443,7 +1449,6 @@ async function pollUpdates() {
     }
   }
 
-  // Hiç mesaj yoksa durum yazısını güncelle
   if (allMessages.length === 0) {
     setStatus('Bağlantı aktif — yeni sinyal bekleniyor…', 'yellow');
   }
