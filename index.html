@@ -709,15 +709,22 @@ footer {
   </div>
 
   <!-- Config -->
-  <div class="tg-config" style="grid-template-columns:1fr auto;">
+  <div class="tg-config" style="grid-template-columns:1fr 1fr auto;">
     <div>
-      <label>Telegram Kanal Adı</label>
-      <input type="text" id="channelName" placeholder="@kanaladınız veya kanaladınız" value="binomosignalwin">
+      <label>Bot Token</label>
+      <input type="password" id="botToken" placeholder="123456:ABC-DEF..." autocomplete="off">
+    </div>
+    <div>
+      <label>Kanal Chat ID veya @username</label>
+      <input type="text" id="channelName" placeholder="@kanaladınız veya -100xxxxxxxxxx" value="">
     </div>
     <button class="btn-fetch" id="fetchBtn" onclick="fetchSignals()">Sinyalleri Çek</button>
   </div>
-  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:20px;padding:0 2px">
-    ℹ️ Public kanallar için token gerekmez — sadece kanal adını girin. Token güvenliğiniz korunur.
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:20px;padding:0 2px;display:flex;align-items:center;gap:16px">
+    <span>🤖 Bot'u kanala <strong style="color:var(--text)">Admin</strong> olarak ekleyin · Token tarayıcıda saklanmaz · Otomatik yenileme: 30sn</span>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--accent)">
+      <input type="checkbox" id="autoRefresh" style="accent-color:var(--accent)"> Otomatik Yenile
+    </label>
   </div>
 
   <!-- Stats bar -->
@@ -1252,7 +1259,7 @@ let stats = { win:0, loss:0, total:0 };
 function renderSignals(messages) {
   const container = document.getElementById('signalsContainer');
   if (!messages || messages.length === 0) {
-    container.innerHTML = '<div class="signals-status">Mesaj bulunamadı. Chat ID ve token doğru mu?</div>';
+    container.innerHTML = '<div class="signals-status">Mesaj bulunamadı. Token ve kanal adını kontrol edin.</div>';
     return;
   }
 
@@ -1260,14 +1267,16 @@ function renderSignals(messages) {
   let cards = '';
 
   messages.slice().reverse().forEach((m, i) => {
-    const text = m.message?.text || m.channel_post?.text || '';
+    // Bot API update formatı: m.channel_post veya m.message
+    const post = m.channel_post || m.message || m;
+    const text = post?.text || post?.caption || '';
     if (!text || text.length < 5) return;
     const parsed = parseSignal(text);
     stats.total++;
     if (parsed.type === 'buy') stats.win++;
     if (parsed.type === 'sell') stats.loss++;
 
-    const date = new Date((m.message?.date || m.channel_post?.date || 0) * 1000);
+    const date = new Date((post?.date || 0) * 1000);
     const timeStr = date.toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
     const dateStr = date.toLocaleDateString('tr-TR', {day:'2-digit',month:'2-digit'});
 
@@ -1295,90 +1304,131 @@ function renderSignals(messages) {
   document.getElementById('heroWR').textContent    = wr + '%';
 }
 
+let autoRefreshTimer = null;
+
 async function fetchSignals() {
-  let channel = document.getElementById('channelName').value.trim();
-  const btn   = document.getElementById('fetchBtn');
+  const token   = document.getElementById('botToken').value.trim();
+  let   channel = document.getElementById('channelName').value.trim();
+  const btn     = document.getElementById('fetchBtn');
 
-  if (!channel) { alert('Kanal adı girin'); return; }
-  channel = channel.replace(/^@/, ''); // @ işaretini kaldır
+  if (!token)   { showError('Bot token girin (BotFather\'dan alınan token)'); return; }
+  if (!channel) { showError('Kanal adı veya Chat ID girin'); return; }
 
-  // Telegram kanal linkini güncelle
-  document.getElementById('tgLink').href = `https://t.me/${channel}`;
+  // Chat ID normalize et: @username veya -100xxxxx
+  const chatId = channel.startsWith('-') ? channel : (channel.startsWith('@') ? channel : '@' + channel);
+
+  // Kanal linkini güncelle
+  const cleanName = channel.replace(/^@/, '');
+  if (!channel.startsWith('-')) {
+    document.getElementById('tgLink').href = `https://t.me/${cleanName}`;
+  }
 
   btn.disabled = true;
   btn.textContent = 'Çekiliyor...';
   document.getElementById('signalsContainer').innerHTML =
-    '<div class="signals-status">Telegram kanalından sinyaller çekiliyor<span>...</span></div>';
+    '<div class="signals-status">Telegram Bot API\'den sinyaller çekiliyor<span>...</span></div>';
 
   try {
-    // Public kanallar için RSS feed (token gerektirmez, tamamen güvenli)
-    const rssUrl = `https://rsshub.app/telegram/channel/${channel}`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+    // Bot API: getUpdates yerine getChat + son mesajlar için getChatHistory yok,
+    // Bu yüzden forwardMessage trick yerine doğrudan updates ile çekiyoruz.
+    // En güvenilir yöntem: updates endpoint (offset=-100 = son 100 mesaj)
+    const apiBase = `https://api.telegram.org/bot${token}`;
 
-    const res  = await fetch(proxyUrl);
-    const data = await res.json();
+    // Önce bot'un kanala erişimini doğrula
+    const chatRes  = await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`);
+    const chatData = await chatRes.json();
 
-    if (!data.contents) throw new Error('Kanal verisi alınamadı');
+    if (!chatData.ok) {
+      throw new Error(chatData.description || 'Kanal bulunamadı. Bot kanalın admini mi?');
+    }
 
-    // RSS XML parse et
-    const parser = new DOMParser();
-    const xml    = parser.parseFromString(data.contents, 'text/xml');
-    const items  = Array.from(xml.querySelectorAll('item'));
+    // Kanal başlığını göster
+    const chatTitle = chatData.result?.title || chatData.result?.username || cleanName;
+    document.getElementById('tgLink').title = chatTitle;
 
-    if (items.length === 0) throw new Error('Mesaj bulunamadı. Kanal adını kontrol edin.');
+    // getUpdates ile son mesajları çek (allowed_updates=channel_post)
+    const updRes  = await fetch(`${apiBase}/getUpdates?limit=100&allowed_updates=["channel_post","message"]`);
+    const updData = await updRes.json();
 
-    const messages = items.map(item => {
-      const title = item.querySelector('title')?.textContent || '';
-      const desc  = item.querySelector('description')?.textContent || '';
-      // HTML tag'leri temizle
-      const text  = (title + ' ' + desc).replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim();
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const date = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : Math.floor(Date.now()/1000);
-      return { message: { text, date } };
+    if (!updData.ok) throw new Error(updData.description || 'Mesajlar alınamadı');
+
+    // Sadece bu kanala ait mesajları filtrele
+    const targetId = chatData.result.id;
+    let updates = updData.result.filter(u => {
+      const post = u.channel_post || u.message;
+      return post && (post.chat?.id === targetId);
     });
 
-    renderSignals(messages);
-
-  } catch (e) {
-    // Fallback: t.me/s/ public preview scrape
-    try {
-      const previewUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://t.me/s/${channel}`)}`;
-      const res2  = await fetch(previewUrl);
-      const data2 = await res2.json();
-
-      if (!data2.contents) throw new Error('Kanal erişilemedi');
-
-      const parser2 = new DOMParser();
-      const doc     = parser2.parseFromString(data2.contents, 'text/html');
-      const posts   = Array.from(doc.querySelectorAll('.tgme_widget_message_text'));
-      const times   = Array.from(doc.querySelectorAll('.tgme_widget_message_date time'));
-
-      if (posts.length === 0) throw new Error('Mesaj parse edilemedi');
-
-      const messages2 = posts.map((p, i) => {
-        const text = p.textContent?.trim() || '';
-        const dateStr = times[i]?.getAttribute('datetime') || '';
-        const date = dateStr ? Math.floor(new Date(dateStr).getTime()/1000) : Math.floor(Date.now()/1000) - i*300;
-        return { message: { text, date } };
-      });
-
-      renderSignals(messages2);
-
-    } catch (e2) {
+    // Eğer getUpdates boş gelirse (bot yeni eklendiyse), forwardedUpdates yok
+    // Alternatif: sendMessage ile ping at, ya da kullanıcıya bildir
+    if (updates.length === 0) {
+      // Kanaldan son mesajı almak için farklı bir yöntem dene
+      // Bot API'de kanal geçmişi yoktur, ama son mesaj ID'sini biliyorsak offset kullanabiliriz
+      // Bu durumda kullanıcıya bilgi ver ve demo sun
       document.getElementById('signalsContainer').innerHTML = `
-        <div class="signals-status" style="color:var(--red)">
-          Kanal çekilemedi: ${e2.message}<br>
-          <small style="opacity:0.6;font-size:10px;margin-top:8px;display:block">
-            Kanal adını doğrulayın ve kanalın public olduğundan emin olun.<br>
-            Demo verilerini görmek için aşağıdaki butonu kullanın.
+        <div class="signals-status" style="color:var(--yellow)">
+          ⚠️ Bot kanala erişebildi (<strong style="color:var(--text)">${chatTitle}</strong>) ama henüz mesaj yok.<br>
+          <small style="opacity:0.7;font-size:10px;margin-top:10px;display:block;line-height:1.8">
+            Bot API sadece bota geldikten <em>sonraki</em> mesajları görür.<br>
+            Kanala yeni bir sinyal geldiğinde otomatik yenileyeceğiz.<br>
+            Şimdi <strong style="color:var(--accent)">Otomatik Yenile</strong>'yi işaretleyerek bekleyebilirsiniz.
           </small>
         </div>`;
+      document.getElementById('statWin').textContent   = '0';
+      document.getElementById('statLoss').textContent  = '0';
+      document.getElementById('statTotal').textContent = '0';
+      document.getElementById('statWR').textContent    = '0%';
+      document.getElementById('heroWR').textContent    = '0%';
+      startAutoRefresh();
+      return;
     }
+
+    renderSignals(updates);
+    startAutoRefresh();
+
+  } catch (e) {
+    showError(e.message);
   } finally {
     btn.disabled = false;
     btn.textContent = 'Sinyalleri Çek';
   }
 }
+
+function showError(msg) {
+  document.getElementById('signalsContainer').innerHTML = `
+    <div class="signals-status" style="color:var(--red)">
+      ❌ ${msg}<br>
+      <small style="opacity:0.6;font-size:10px;margin-top:10px;display:block;line-height:1.8">
+        <strong>Kontrol listesi:</strong><br>
+        1. BotFather'dan aldığınız token doğru mu?<br>
+        2. Bot, kanalınıza <strong>Admin</strong> olarak ekli mi?<br>
+        3. Kanal adı: @username veya Chat ID: -100xxxxxxxxxx<br>
+        4. Kanalın Public olduğundan emin olun
+      </small>
+    </div>`;
+}
+
+function startAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  const cb = document.getElementById('autoRefresh');
+  if (cb && cb.checked) {
+    autoRefreshTimer = setInterval(() => {
+      if (document.getElementById('autoRefresh').checked) {
+        fetchSignals();
+      } else {
+        clearInterval(autoRefreshTimer);
+      }
+    }, 30000);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('autoRefresh');
+  if (cb) cb.addEventListener('change', () => {
+    if (cb.checked) startAutoRefresh();
+    else if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  });
+});
 
 // ── DEMO MODE ──
 function loadDemo() {
@@ -1397,18 +1447,9 @@ function loadDemo() {
   renderSignals(demoMessages);
 }
 
-// Auto-fetch real channel on start, fallback to demo
+// Sayfa yüklenince demo ile başla
 window.addEventListener('DOMContentLoaded', () => {
-  // Set telegram link
-  document.getElementById('tgLink').href = 'https://t.me/binomosignalwin';
-  // Try real fetch first, demo as fallback
-  setTimeout(async () => {
-    try {
-      await fetchSignals();
-    } catch(e) {
-      loadDemo();
-    }
-  }, 500);
+  loadDemo();
 });
 </script>
 </body>
