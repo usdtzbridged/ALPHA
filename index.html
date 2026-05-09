@@ -1381,17 +1381,23 @@ async function fetchSignals() {
       if (!del.ok) throw new Error('Webhook silinemedi: ' + del.description);
     }
 
-    // 2) Kanal doğrula
-    const chatData = await (await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`)).json();
+    // 2) Kanal doğrula — ID'yi text olarak al (büyük sayı hassasiyet kaybını önlemek için)
+    const chatResp = await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`);
+    const chatText = await chatResp.text();
+    const chatData = JSON.parse(chatText);
     if (!chatData.ok) throw new Error(chatData.description || 'Kanal bulunamadı. Bot kanalın admini mi?');
+
+    // Regex ile ID'yi string olarak çıkar (JSON.parse büyük sayıları bozar)
+    const idMatch = chatText.match(/"id"\s*:\s*(-?\d+)/);
+    const chatIdStr = idMatch ? idMatch[1] : String(chatData.result.id);
 
     const chatTitle = chatData.result?.title || chatData.result?.username || cleanName;
     document.getElementById('tgLink').title = chatTitle;
 
     // 3) State sıfırla
     apiBaseGlobal = apiBase;
-    targetChatId  = chatData.result.id;
-    console.log('[Init] targetChatId =', targetChatId, 'type=', typeof targetChatId);
+    targetChatId  = chatIdStr;
+    console.log('[Init] targetChatId =', targetChatId);
     allMessages   = [];
     nextOffset    = 0;
     initialized   = true;
@@ -1416,7 +1422,10 @@ async function pollUpdates() {
   if (!initialized) return;
 
   const url = `${apiBaseGlobal}/getUpdates?limit=100&offset=${nextOffset}`;
-  const data = await (await fetch(url)).json();
+  const rawText = await (await fetch(url)).text();
+  // Büyük chat ID'leri string'e çevir (JSON number hassasiyet kaybını önle)
+  const safeText = rawText.replace(/"id"\s*:\s*(-?\d{10,})/g, '"id":"$1"');
+  const data = JSON.parse(safeText);
 
   if (!data.ok) {
     if (data.description?.includes('webhook')) {
@@ -1432,7 +1441,7 @@ async function pollUpdates() {
   if (updates.length > 0) {
     nextOffset = updates[updates.length - 1].update_id + 1;
 
-    const targetIdStr = String(targetChatId);
+    const targetIdStr = targetChatId; // zaten String
     const fresh = updates.filter(u => {
       const post = u.channel_post || u.message || u.edited_channel_post;
       if (!post) return false;
