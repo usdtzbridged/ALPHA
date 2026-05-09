@@ -381,6 +381,21 @@ section { position:relative; z-index:1; }
   border-left: 1px solid var(--border2);
   padding-left: 10px;
 }
+.sig-details {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sig-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+}
+.sig-row span:first-child { color: var(--muted); }
 .sig-meta {
   display:flex; justify-content:space-between;
   font-family: var(--mono);
@@ -1203,55 +1218,69 @@ function calcMartingale() {
 }
 calcMartingale();
 
-// ── TELEGRAM SIGNAL FETCHER ──
+// ── TELEGRAM SIGNAL PARSER ──
 function parseSignal(text) {
-  const lc = text.toLowerCase();
   let type = 'info', pair = '', direction = '', extra = '';
+  let price = '', tp1 = '', tp2 = '', sl = '', rsi = '', stoch = '', timeframe = '', score = '', aiDecision = '';
 
-  // ── Direction detection (Binomo/Binary format + genel) ──
-  const isBuy  = /📈|⬆️|🔼|\bcall\b|\blong\b|\bbuy\b|yüksel|yukarı|above|higher/i.test(text);
-  const isSell = /📉|⬇️|🔽|\bput\b|\bshort\b|\bsell\b|düş|aşağı|below|lower/i.test(text);
-
-  if (isBuy)  { direction = 'CALL'; type = 'buy'; }
-  if (isSell) { direction = 'PUT';  type = 'sell'; }
-
-  // Win/loss override (result mesajları)
-  const isWin  = /✅|🏆|win|kazanç|kazandı|profit|başarı/i.test(text);
-  const isLoss = /❌|💔|loss|kayıp|kaybetti|zarar/i.test(text);
-  if (isWin && !isBuy && !isSell)  { type = 'buy'; }
-  if (isLoss && !isBuy && !isSell) { type = 'sell'; }
-
-  // ── Pair extraction ──
-  // Önce slash'lı format: EUR/USD, BTC/USDT
-  let pairMatch = text.match(/\b([A-Z]{2,6})[\/-]([A-Z]{2,6})\b/);
-  if (pairMatch) {
-    pair = pairMatch[0].toUpperCase();
+  // ── Yön tespiti (YÖN satırı öncelikli) ──
+  const yonMatch = text.match(/YÖN\s*:\s*(LONG|SHORT|CALL|PUT|BUY|SELL|YUKARI AL|AŞAĞI SAT)/i);
+  if (yonMatch) {
+    const v = yonMatch[1].toUpperCase();
+    if (/LONG|CALL|BUY|YUKARI/.test(v)) { direction = 'LONG'; type = 'buy'; }
+    else                                  { direction = 'SHORT'; type = 'sell'; }
   } else {
-    // Bitişik format: EURUSD, XAUUSD, vb.
-    const concat = text.match(/\b(EUR|GBP|AUD|NZD|USD|CAD|CHF|JPY|BTC|ETH|XAU|XAG)(USD|EUR|GBP|JPY|CAD|CHF|USDT|AUD)\b/i);
-    if (concat) {
-      pair = concat[0].slice(0,3).toUpperCase() + '/' + concat[0].slice(3).toUpperCase();
-    }
-  }
-  // Fallback keyword eşleştirme
-  if (!pair) {
-    if (/bitcoin|\bbtc\b/i.test(text))  pair = 'BTC/USD';
-    else if (/ethereum|\beth\b/i.test(text)) pair = 'ETH/USD';
-    else if (/gold|xauusd|\bxau\b/i.test(text)) pair = 'XAU/USD';
-    else if (/eurusd|eur\/usd/i.test(text)) pair = 'EUR/USD';
-    else if (/gbpusd|gbp\/usd/i.test(text)) pair = 'GBP/USD';
-    else if (/usdjpy|usd\/jpy/i.test(text)) pair = 'USD/JPY';
+    // emoji/kelime fallback
+    if (/📈|⬆️|🔼|\blong\b|\bcall\b|\bbuy\b|yukarı al/i.test(text)) { direction = 'LONG';  type = 'buy'; }
+    if (/📉|⬇️|🔽|\bshort\b|\bput\b|\bsell\b|aşağı sat/i.test(text)) { direction = 'SHORT'; type = 'sell'; }
   }
 
-  // Extra info: süre, expiry, OTC vb.
-  const expiry = text.match(/(\d+)\s*(min|dk|m|dakika|minute)/i);
-  if (expiry) extra = expiry[1] + 'dk';
-  const otc = /OTC/i.test(text);
-  if (otc) extra += (extra?' · ':'') + 'OTC';
-
+  // ── Coin/Pair adı — başlık satırından ──
+  // Format: "⚡️📈  Sui  — SCALP"  veya  "BTC — SWING"
+  const titleMatch = text.match(/(?:⚡️|⚡|🔥|💥|🚀)?(?:📈|📉)?\s{0,4}([A-Za-z]{2,10}(?:\/[A-Za-z]{2,6})?)\s{0,4}[—\-–]/);
+  if (titleMatch) {
+    pair = titleMatch[1].toUpperCase();
+  } else {
+    // slash formatı: EUR/USD, BTC/USDT
+    const slashM = text.match(/\b([A-Z]{2,6})\/([A-Z]{2,6})\b/);
+    if (slashM) pair = slashM[0];
+  }
   if (!pair) pair = 'SİNYAL';
 
-  return { type, pair, direction, extra };
+  // ── Strateji türü (SCALP / SWING / SPOT) ──
+  const stratM = text.match(/\b(SCALP(?:ING)?|SWING|SPOT|FUTURES?)\b/i);
+  if (stratM) extra = stratM[1].toUpperCase();
+
+  // ── Fiyat bilgileri ──
+  const priceM = text.match(/FİYAT\s*:\s*\$?([\d.,]+)/i);
+  if (priceM) price = '$' + priceM[1];
+
+  const tp1M = text.match(/TP\s*1\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
+  if (tp1M) tp1 = '$' + tp1M[1] + ' ' + tp1M[2];
+
+  const tp2M = text.match(/TP\s*2\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
+  if (tp2M) tp2 = '$' + tp2M[1] + ' ' + tp2M[2];
+
+  const slM = text.match(/SL\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
+  if (slM) sl = '$' + slM[1] + ' ' + slM[2];
+
+  // ── İndikatörler ──
+  const rsiM   = text.match(/RSI\s*:\s*([\d.]+)/i);
+  if (rsiM) rsi = rsiM[1];
+
+  const stochM = text.match(/StochRSI\s*:\s*([\d.]+)/i);
+  if (stochM) stoch = stochM[1];
+
+  const tfM = text.match(/TIMEFRAME\s*:\s*([^\n]+)/i);
+  if (tfM) timeframe = tfM[1].trim();
+
+  const scoreM = text.match(/SİNYAL\s*:\s*(\d+)\/100/i);
+  if (scoreM) score = scoreM[1] + '/100';
+
+  const aiM = text.match(/AI KARAR\s*:\s*([^\n]+)/i);
+  if (aiM) aiDecision = aiM[1].trim();
+
+  return { type, pair, direction, extra, price, tp1, tp2, sl, rsi, stoch, timeframe, score, aiDecision };
 }
 
 let stats = { win:0, loss:0, total:0 };
@@ -1267,26 +1296,38 @@ function renderSignals(messages) {
   let cards = '';
 
   messages.slice().reverse().forEach((m, i) => {
-    // Bot API update formatı: m.channel_post veya m.message
     const post = m.channel_post || m.message || m;
     const text = post?.text || post?.caption || '';
     if (!text || text.length < 5) return;
-    const parsed = parseSignal(text);
+    const p = parseSignal(text);
     stats.total++;
-    if (parsed.type === 'buy') stats.win++;
-    if (parsed.type === 'sell') stats.loss++;
+    if (p.type === 'buy')  stats.win++;
+    if (p.type === 'sell') stats.loss++;
 
-    const date = new Date((post?.date || 0) * 1000);
-    const timeStr = date.toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
-    const dateStr = date.toLocaleDateString('tr-TR', {day:'2-digit',month:'2-digit'});
+    const date    = new Date((post?.date || 0) * 1000);
+    const timeStr = date.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+    const dateStr = date.toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit'});
+
+    // Detay satırları
+    const rows = [
+      p.price     && `<div class="sig-row"><span>Fiyat</span><span>${p.price}</span></div>`,
+      p.tp1       && `<div class="sig-row"><span>TP 1</span><span style="color:var(--green)">${p.tp1}</span></div>`,
+      p.tp2       && `<div class="sig-row"><span>TP 2</span><span style="color:var(--green)">${p.tp2}</span></div>`,
+      p.sl        && `<div class="sig-row"><span>SL</span><span style="color:var(--red)">${p.sl}</span></div>`,
+      p.timeframe && `<div class="sig-row"><span>Timeframe</span><span>${p.timeframe}</span></div>`,
+      p.rsi       && `<div class="sig-row"><span>RSI</span><span>${p.rsi}</span></div>`,
+      p.stoch     && `<div class="sig-row"><span>StochRSI</span><span>${p.stoch}</span></div>`,
+      p.score     && `<div class="sig-row"><span>Sinyal Gücü</span><span style="color:var(--yellow)">${p.score}</span></div>`,
+      p.aiDecision && `<div class="sig-row"><span>AI Karar</span><span style="color:var(--accent)">${p.aiDecision}</span></div>`,
+    ].filter(Boolean).join('');
 
     cards += `
-      <div class="signal-card ${parsed.type}" style="animation-delay:${i*0.04}s">
+      <div class="signal-card ${p.type}" style="animation-delay:${i*0.04}s">
         <div class="sig-top">
-          <div class="sig-pair">${parsed.pair}${parsed.extra ? '<span style="font-size:11px;font-family:var(--mono);color:var(--muted);font-weight:400;margin-left:8px">'+parsed.extra+'</span>' : ''}</div>
-          ${parsed.direction ? `<span class="sig-dir ${parsed.type}">${parsed.direction}</span>` : '<span class="sig-dir info">INFO</span>'}
+          <div class="sig-pair">${p.pair}${p.extra ? `<span style="font-size:10px;font-family:var(--mono);color:var(--muted);font-weight:400;margin-left:8px">${p.extra}</span>` : ''}</div>
+          <span class="sig-dir ${p.type}">${p.direction || 'INFO'}</span>
         </div>
-        <div class="sig-msg">${text.substring(0, 160)}${text.length>160?'…':''}</div>
+        ${rows ? `<div class="sig-details">${rows}</div>` : ''}
         <div class="sig-meta">
           <span>${dateStr} ${timeStr}</span>
           <span style="color:var(--accent);opacity:0.6">#${stats.total}</span>
@@ -1304,94 +1345,127 @@ function renderSignals(messages) {
   document.getElementById('heroWR').textContent    = wr + '%';
 }
 
+// ── STATE ──
 let autoRefreshTimer = null;
+let nextOffset       = 0;      // getUpdates offset — yeni mesajları kaçırmamak için
+let targetChatId     = null;   // doğrulandıktan sonra sabit kalır
+let allMessages      = [];     // biriktirilen tüm mesajlar
+let apiBaseGlobal    = '';
+let initialized      = false;
 
+// ── İLK BAĞLANTI (token + kanal doğrula, webhook sil) ──
 async function fetchSignals() {
   const token   = document.getElementById('botToken').value.trim();
-  let   channel = document.getElementById('channelName').value.trim();
+  const channel = document.getElementById('channelName').value.trim();
   const btn     = document.getElementById('fetchBtn');
 
   if (!token)   { showError('Bot token girin (BotFather\'dan alınan token)'); return; }
   if (!channel) { showError('Kanal adı veya Chat ID girin'); return; }
 
-  // Chat ID normalize et: @username veya -100xxxxx
-  const chatId = channel.startsWith('-') ? channel : (channel.startsWith('@') ? channel : '@' + channel);
-
-  // Kanal linkini güncelle
+  const chatId    = channel.startsWith('-') ? channel : (channel.startsWith('@') ? channel : '@' + channel);
   const cleanName = channel.replace(/^@/, '');
-  if (!channel.startsWith('-')) {
-    document.getElementById('tgLink').href = `https://t.me/${cleanName}`;
-  }
+  if (!channel.startsWith('-')) document.getElementById('tgLink').href = `https://t.me/${cleanName}`;
 
-  btn.disabled = true;
-  btn.textContent = 'Çekiliyor...';
-  document.getElementById('signalsContainer').innerHTML =
-    '<div class="signals-status">Telegram Bot API\'den sinyaller çekiliyor<span>...</span></div>';
+  btn.disabled    = true;
+  btn.textContent = 'Bağlanıyor...';
+  setStatus('Telegram Bot API\'ye bağlanılıyor…');
 
   try {
-    // Bot API: getUpdates yerine getChat + son mesajlar için getChatHistory yok,
-    // Bu yüzden forwardMessage trick yerine doğrudan updates ile çekiyoruz.
-    // En güvenilir yöntem: updates endpoint (offset=-100 = son 100 mesaj)
     const apiBase = `https://api.telegram.org/bot${token}`;
 
-    // Önce bot'un kanala erişimini doğrula
-    const chatRes  = await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`);
-    const chatData = await chatRes.json();
-
-    if (!chatData.ok) {
-      throw new Error(chatData.description || 'Kanal bulunamadı. Bot kanalın admini mi?');
+    // 1) Webhook varsa sil
+    const whData = await (await fetch(`${apiBase}/getWebhookInfo`)).json();
+    if (whData.ok && whData.result?.url) {
+      setStatus('Webhook siliniyor…');
+      const del = await (await fetch(`${apiBase}/deleteWebhook?drop_pending_updates=false`)).json();
+      if (!del.ok) throw new Error('Webhook silinemedi: ' + del.description);
     }
 
-    // Kanal başlığını göster
+    // 2) Kanal doğrula
+    const chatData = await (await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`)).json();
+    if (!chatData.ok) throw new Error(chatData.description || 'Kanal bulunamadı. Bot kanalın admini mi?');
+
     const chatTitle = chatData.result?.title || chatData.result?.username || cleanName;
     document.getElementById('tgLink').title = chatTitle;
 
-    // getUpdates ile son mesajları çek (allowed_updates=channel_post)
-    const updRes  = await fetch(`${apiBase}/getUpdates?limit=100&allowed_updates=["channel_post","message"]`);
-    const updData = await updRes.json();
+    // 3) State sıfırla
+    apiBaseGlobal = apiBase;
+    targetChatId  = chatData.result.id;
+    allMessages   = [];
+    nextOffset    = 0;
+    initialized   = true;
 
-    if (!updData.ok) throw new Error(updData.description || 'Mesajlar alınamadı');
+    // 4) Mevcut kuyruktaki mesajları çek (offset=0 → hepsini al)
+    setStatus(`${chatTitle} kanalına bağlandı — mesajlar çekiliyor…`);
+    await pollUpdates();
 
-    // Sadece bu kanala ait mesajları filtrele
-    const targetId = chatData.result.id;
-    let updates = updData.result.filter(u => {
-      const post = u.channel_post || u.message;
-      return post && (post.chat?.id === targetId);
-    });
-
-    // Eğer getUpdates boş gelirse (bot yeni eklendiyse), forwardedUpdates yok
-    // Alternatif: sendMessage ile ping at, ya da kullanıcıya bildir
-    if (updates.length === 0) {
-      // Kanaldan son mesajı almak için farklı bir yöntem dene
-      // Bot API'de kanal geçmişi yoktur, ama son mesaj ID'sini biliyorsak offset kullanabiliriz
-      // Bu durumda kullanıcıya bilgi ver ve demo sun
-      document.getElementById('signalsContainer').innerHTML = `
-        <div class="signals-status" style="color:var(--yellow)">
-          ⚠️ Bot kanala erişebildi (<strong style="color:var(--text)">${chatTitle}</strong>) ama henüz mesaj yok.<br>
-          <small style="opacity:0.7;font-size:10px;margin-top:10px;display:block;line-height:1.8">
-            Bot API sadece bota geldikten <em>sonraki</em> mesajları görür.<br>
-            Kanala yeni bir sinyal geldiğinde otomatik yenileyeceğiz.<br>
-            Şimdi <strong style="color:var(--accent)">Otomatik Yenile</strong>'yi işaretleyerek bekleyebilirsiniz.
-          </small>
-        </div>`;
-      document.getElementById('statWin').textContent   = '0';
-      document.getElementById('statLoss').textContent  = '0';
-      document.getElementById('statTotal').textContent = '0';
-      document.getElementById('statWR').textContent    = '0%';
-      document.getElementById('heroWR').textContent    = '0%';
-      startAutoRefresh();
-      return;
-    }
-
-    renderSignals(updates);
+    // 5) Otomatik yenilemeyi başlat
     startAutoRefresh();
 
   } catch (e) {
     showError(e.message);
   } finally {
-    btn.disabled = false;
+    btn.disabled    = false;
     btn.textContent = 'Sinyalleri Çek';
   }
+}
+
+// ── POLLING: sadece yeni mesajları çeker, biriktirir ──
+async function pollUpdates() {
+  if (!initialized) return;
+
+  const url = `${apiBaseGlobal}/getUpdates?limit=100&offset=${nextOffset}&allowed_updates=${encodeURIComponent('["channel_post","message"]')}`;
+  const data = await (await fetch(url)).json();
+
+  if (!data.ok) {
+    // Webhook çakışması tekrar olursa
+    if (data.description?.includes('webhook')) {
+      await fetch(`${apiBaseGlobal}/deleteWebhook?drop_pending_updates=false`);
+      return;
+    }
+    throw new Error(data.description || 'getUpdates başarısız');
+  }
+
+  const updates = data.result;
+  if (updates.length > 0) {
+    // Bir sonraki çekişte bu mesajları tekrar almamak için offset ilerlet
+    nextOffset = updates[updates.length - 1].update_id + 1;
+
+    // Bu kanala ait olanları filtrele
+    const fresh = updates.filter(u => {
+      const post = u.channel_post || u.message;
+      return post && post.chat?.id === targetChatId;
+    });
+
+    if (fresh.length > 0) {
+      allMessages = [...allMessages, ...fresh];
+      renderSignals(allMessages);
+    }
+  }
+
+  // Hiç mesaj yoksa durum yazısını güncelle
+  if (allMessages.length === 0) {
+    setStatus('Bağlantı aktif — yeni sinyal bekleniyor…', 'yellow');
+  }
+}
+
+// ── OTOMATİK YENİLEME (10sn) ──
+function startAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(async () => {
+    try { await pollUpdates(); } catch(e) { console.warn('Poll hatası:', e.message); }
+  }, 10000);
+  // Checkbox kapalıysa durdur
+  const cb = document.getElementById('autoRefresh');
+  if (cb) cb.onchange = () => {
+    if (!cb.checked) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+    else startAutoRefresh();
+  };
+}
+
+function setStatus(msg, color = 'accent') {
+  document.getElementById('signalsContainer').innerHTML =
+    `<div class="signals-status" style="color:var(--${color})">${msg}</div>`;
 }
 
 function showError(msg) {
@@ -1401,34 +1475,11 @@ function showError(msg) {
       <small style="opacity:0.6;font-size:10px;margin-top:10px;display:block;line-height:1.8">
         <strong>Kontrol listesi:</strong><br>
         1. BotFather'dan aldığınız token doğru mu?<br>
-        2. Bot, kanalınıza <strong>Admin</strong> olarak ekli mi?<br>
-        3. Kanal adı: @username veya Chat ID: -100xxxxxxxxxx<br>
-        4. Kanalın Public olduğundan emin olun
+        2. Bot kanalınıza <strong>Admin</strong> olarak ekli mi?<br>
+        3. Kanal: @username veya Chat ID: -100xxxxxxxxxx
       </small>
     </div>`;
 }
-
-function startAutoRefresh() {
-  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-  const cb = document.getElementById('autoRefresh');
-  if (cb && cb.checked) {
-    autoRefreshTimer = setInterval(() => {
-      if (document.getElementById('autoRefresh').checked) {
-        fetchSignals();
-      } else {
-        clearInterval(autoRefreshTimer);
-      }
-    }, 30000);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const cb = document.getElementById('autoRefresh');
-  if (cb) cb.addEventListener('change', () => {
-    if (cb.checked) startAutoRefresh();
-    else if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-  });
-});
 
 // ── DEMO MODE ──
 function loadDemo() {
@@ -1447,10 +1498,7 @@ function loadDemo() {
   renderSignals(demoMessages);
 }
 
-// Sayfa yüklenince demo ile başla
-window.addEventListener('DOMContentLoaded', () => {
-  loadDemo();
-});
+window.addEventListener('DOMContentLoaded', () => { loadDemo(); });
 </script>
 </body>
 </html>
