@@ -29,9 +29,7 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--bg);
   color: var(--text);
@@ -40,8 +38,6 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
 }
-
-/* ── GRID BACKGROUND ── */
 body::before {
   content:'';
   position:fixed;
@@ -54,7 +50,7 @@ body::before {
   z-index:0;
 }
 
-/* ── NAV ── */
+/* NAV */
 nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
   display:flex; align-items:center; justify-content:space-between;
@@ -63,601 +59,187 @@ nav {
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
-.nav-logo {
-  font-family: var(--display);
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--text);
-}
-.nav-logo span { color: var(--accent); }
+.nav-logo { font-family:var(--display); font-size:20px; font-weight:800; letter-spacing:-0.5px; color:var(--text); }
+.nav-logo span { color:var(--accent); }
 .nav-links { display:flex; gap:32px; }
-.nav-links a {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  text-decoration: none;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--accent); }
-.nav-badge {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-  border: 1px solid rgba(0,212,170,0.3);
-  padding: 5px 14px;
-  border-radius: 2px;
-  display:flex; align-items:center; gap:7px;
-}
-.nav-badge::before {
-  content:'';
-  width:6px; height:6px;
-  background: var(--accent);
-  border-radius:50%;
-  animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50% { opacity:0.4; transform:scale(0.8); }
-}
+.nav-links a { font-family:var(--mono); font-size:12px; color:var(--muted); text-decoration:none; letter-spacing:0.05em; text-transform:uppercase; transition:color 0.2s; }
+.nav-links a:hover { color:var(--accent); }
+.nav-badge { font-family:var(--mono); font-size:11px; color:var(--accent); border:1px solid rgba(0,212,170,0.3); padding:5px 14px; border-radius:2px; display:flex; align-items:center; gap:7px; }
+.nav-badge::before { content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
 
-/* ── SECTIONS ── */
 section { position:relative; z-index:1; }
 
-/* ── HERO ── */
+/* HERO */
 #hero {
-  min-height: 100vh;
-  display:flex; flex-direction:column;
+  min-height:100vh; display:flex; flex-direction:column;
   justify-content:center; align-items:flex-start;
-  padding: 120px 48px 80px;
-  position:relative;
+  padding:120px 48px 80px; position:relative;
 }
-.hero-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 24px;
-  display:flex; align-items:center; gap:12px;
-}
-.hero-eyebrow::before {
-  content:'';
-  width:32px; height:1px;
-  background: var(--accent);
-}
-.hero-title {
-  font-family: var(--display);
-  font-size: clamp(52px, 8vw, 110px);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -3px;
-  max-width: 900px;
-  margin-bottom: 32px;
-}
-.hero-title .line2 { color: var(--accent); display:block; }
-.hero-title .line3 { color: var(--muted); display:block; font-weight:400; }
-.hero-desc {
-  font-size: 16px;
-  color: var(--muted);
-  max-width: 480px;
-  margin-bottom: 48px;
-  line-height: 1.8;
-}
+.hero-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+.hero-eyebrow::before { content:''; width:32px; height:1px; background:var(--accent); }
+.hero-title { font-family:var(--display); font-size:clamp(52px,8vw,110px); font-weight:800; line-height:0.92; letter-spacing:-3px; max-width:900px; margin-bottom:32px; }
+.hero-title .line2 { color:var(--accent); display:block; }
+.hero-title .line3 { color:var(--muted); display:block; font-weight:400; }
+.hero-desc { font-size:16px; color:var(--muted); max-width:480px; margin-bottom:48px; line-height:1.8; }
 .hero-ctas { display:flex; gap:16px; align-items:center; }
-.btn-primary {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: var(--accent);
-  color: var(--bg);
-  padding: 14px 28px;
-  border-radius: 2px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-.btn-primary:hover { background: #00f0c3; transform:translateY(-1px); }
-.btn-secondary {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  display:flex; align-items:center; gap:8px;
-  transition: color 0.2s;
-}
-.btn-secondary:hover { color: var(--text); }
+.btn-primary { font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; background:var(--accent); color:var(--bg); padding:14px 28px; border-radius:2px; text-decoration:none; font-weight:500; transition:all 0.2s; }
+.btn-primary:hover { background:#00f0c3; transform:translateY(-1px); }
+.btn-secondary { font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:8px; transition:color 0.2s; }
+.btn-secondary:hover { color:var(--text); }
 .btn-secondary::after { content:'→'; }
+.hero-stats { position:absolute; right:48px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:3px; }
+.hero-stat-item { background:var(--surface); border:1px solid var(--border); padding:20px 28px; min-width:180px; position:relative; overflow:hidden; }
+.hero-stat-item::before { content:''; position:absolute; left:0;top:0;bottom:0; width:3px; background:var(--accent); }
+.stat-val { font-family:var(--display); font-size:32px; font-weight:800; color:var(--text); letter-spacing:-1px; }
+.stat-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:2px; }
 
-/* Hero stats */
-.hero-stats {
-  position:absolute;
-  right: 48px; top:50%;
-  transform:translateY(-50%);
-  display:flex; flex-direction:column; gap:3px;
-}
-.hero-stat-item {
+/* TICKER */
+.ticker-wrap { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden; padding:12px 0; position:relative; z-index:1; }
+.ticker { display:flex; gap:48px; animation:ticker 30s linear infinite; width:max-content; }
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.tick-item { font-family:var(--mono); font-size:12px; color:var(--muted); display:flex; align-items:center; gap:10px; white-space:nowrap; }
+.tick-item .sym { color:var(--text); font-weight:500; }
+.tick-item .up { color:var(--green); }
+.tick-item .dn { color:var(--red); }
+
+/* LIVE SIGNALS */
+#signals { padding:100px 48px; }
+.section-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:48px; }
+.section-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; margin-bottom:12px; }
+.section-title { font-family:var(--display); font-size:clamp(28px,4vw,48px); font-weight:700; letter-spacing:-1.5px; line-height:1; }
+
+/* Live header badges */
+.live-header-right { display:flex; align-items:center; gap:12px; }
+.live-dot-badge { display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--accent); border:1px solid rgba(0,212,170,0.25); padding:8px 16px; border-radius:2px; }
+.live-dot-badge .dot { width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; }
+.live-dot-badge.offline { color:var(--muted); border-color:rgba(255,255,255,0.1); }
+.live-dot-badge.offline .dot { background:var(--muted); animation:none; }
+.refresh-btn { font-family:var(--mono); font-size:11px; background:none; border:1px solid var(--border2); color:var(--muted); padding:8px 14px; border-radius:2px; cursor:pointer; transition:all 0.2s; letter-spacing:0.05em; }
+.refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+/* Signal info bar */
+.signal-info-bar {
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 20px 28px;
-  min-width: 180px;
-  position:relative;
-  overflow:hidden;
-}
-.hero-stat-item::before {
-  content:'';
-  position:absolute;
-  left:0; top:0; bottom:0;
-  width:3px;
-  background: var(--accent);
-}
-.stat-val {
-  font-family: var(--display);
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -1px;
-}
-.stat-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-/* ── TICKER TAPE ── */
-.ticker-wrap {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow:hidden;
-  padding: 12px 0;
-  position:relative; z-index:1;
-}
-.ticker {
-  display:flex; gap:48px;
-  animation: ticker 30s linear infinite;
-  width:max-content;
-}
-@keyframes ticker {
-  0% { transform:translateX(0); }
-  100% { transform:translateX(-50%); }
-}
-.tick-item {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  display:flex; align-items:center; gap:10px;
-  white-space:nowrap;
-}
-.tick-item .sym { color: var(--text); font-weight:500; }
-.tick-item .up { color: var(--green); }
-.tick-item .dn { color: var(--red); }
-
-/* ── LIVE SIGNALS ── */
-#signals {
-  padding: 100px 48px;
-}
-.section-header {
-  display:flex; align-items:flex-start; justify-content:space-between;
-  margin-bottom: 48px;
-}
-.section-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.section-title {
-  font-family: var(--display);
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 700;
-  letter-spacing: -1.5px;
-  line-height: 1;
-}
-.tg-badge {
-  display:flex; align-items:center; gap:8px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #4db8ff;
-  border: 1px solid rgba(77,184,255,0.2);
-  padding: 8px 14px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-.tg-badge:hover { border-color: rgba(77,184,255,0.5); color:#7fcfff; }
-
-/* Telegram config panel */
-.tg-config {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 20px 24px;
-  margin-bottom: 28px;
-  display:grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 12px;
-  align-items: end;
-}
-.tg-config label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  display:block;
-  margin-bottom: 6px;
-}
-.tg-config input {
-  width:100%;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 10px 14px;
-  border-radius: 2px;
-  outline:none;
-  transition: border-color 0.2s;
-}
-.tg-config input:focus { border-color: var(--accent); }
-.tg-config input::placeholder { color: var(--muted); }
-.btn-fetch {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: var(--accent);
-  color: var(--bg);
-  border: none;
-  padding: 11px 20px;
-  border-radius: 2px;
-  cursor:pointer;
-  font-weight:500;
-  white-space:nowrap;
-  transition: all 0.2s;
-}
-.btn-fetch:hover { background:#00f0c3; }
-.btn-fetch:disabled { background: var(--muted); cursor:not-allowed; }
-
-/* Signal cards */
-.signals-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 2px;
-}
-.signal-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 20px 24px;
-  position:relative;
-  overflow:hidden;
-  transition: border-color 0.2s;
-  animation: fadeIn 0.4s ease both;
-}
-.signal-card:hover { border-color: var(--border2); }
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(8px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-.signal-card.buy::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--green); }
-.signal-card.sell::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--red); }
-.signal-card.info::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--yellow); }
-.sig-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
-.sig-pair {
-  font-family: var(--display);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-.sig-dir {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border-radius: 2px;
-}
-.sig-dir.buy { background:rgba(0,212,170,0.12); color:var(--green); }
-.sig-dir.sell { background:rgba(255,71,87,0.12); color:var(--red); }
-.sig-dir.info { background:rgba(255,211,42,0.12); color:var(--yellow); }
-.sig-msg {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 12px;
-  border-left: 1px solid var(--border2);
-  padding-left: 10px;
-}
-.sig-details {
-  margin-bottom: 12px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.sig-row {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
   font-family: var(--mono);
   font-size: 11px;
-  padding: 3px 0;
-  border-bottom: 1px solid var(--border);
-}
-.sig-row span:first-child { color: var(--muted); }
-.sig-meta {
-  display:flex; justify-content:space-between;
-  font-family: var(--mono);
-  font-size: 10px;
   color: var(--muted);
+  border-radius: 2px;
 }
+.signal-info-bar span { color: var(--text); }
+.signal-info-bar .auto-badge { color:var(--accent); border:1px solid rgba(0,212,170,0.2); padding:3px 10px; border-radius:2px; font-size:10px; }
 
 /* Stats bar */
-.stats-bar {
-  display:grid;
-  grid-template-columns: repeat(4,1fr);
-  gap:2px;
-  margin-bottom: 24px;
-}
-.stat-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 16px 20px;
-}
-.stat-box .val {
-  font-family: var(--display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -1px;
-}
-.stat-box .lbl {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 2px;
-}
-.val.green { color: var(--green); }
-.val.red   { color: var(--red); }
+.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-bottom:24px; }
+.stat-box { background:var(--surface); border:1px solid var(--border); padding:16px 20px; }
+.stat-box .val { font-family:var(--display); font-size:28px; font-weight:700; letter-spacing:-1px; }
+.stat-box .lbl { font-family:var(--mono); font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-top:2px; }
+.val.green { color:var(--green); }
+.val.red   { color:var(--red); }
 
-/* Loading / empty */
-.signals-status {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  text-align: center;
-  padding: 60px 20px;
-  border: 1px dashed var(--border2);
-  letter-spacing: 0.05em;
-}
-.signals-status span { color: var(--accent); }
+/* Signal cards */
+.signals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:2px; }
+.signal-card { background:var(--surface); border:1px solid var(--border); padding:20px 24px; position:relative; overflow:hidden; transition:border-color 0.2s; animation:fadeIn 0.4s ease both; }
+.signal-card:hover { border-color:var(--border2); }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.signal-card.buy::before  { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--green); }
+.signal-card.sell::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--red); }
+.signal-card.win::before  { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--yellow); }
+.signal-card.loss::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--muted); }
+.signal-card.info::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; background:var(--accent2); }
 
-/* ── FLOW DIAGRAM ── */
-#flow {
-  padding: 100px 48px;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.flow-container {
-  position: relative;
-  overflow-x: auto;
-}
+.sig-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.sig-pair { font-family:var(--display); font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+.sig-dir { font-family:var(--mono); font-size:10px; font-weight:500; letter-spacing:0.1em; padding:4px 10px; border-radius:2px; }
+.sig-dir.buy  { background:rgba(0,212,170,0.12); color:var(--green); }
+.sig-dir.sell { background:rgba(255,71,87,0.12);  color:var(--red); }
+.sig-dir.win  { background:rgba(255,211,42,0.12); color:var(--yellow); }
+.sig-dir.loss { background:rgba(90,106,130,0.2);  color:var(--muted); }
+.sig-dir.info { background:rgba(0,102,255,0.12);  color:#4db8ff; }
 
-/* Flow SVG wrapper */
-.flow-svg-wrap {
-  min-width: 900px;
-}
+.sig-rows { margin-bottom:12px; }
+.sig-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-family:var(--mono); font-size:11px; }
+.sig-row:last-child { border-bottom:none; }
+.sig-row .k { color:var(--muted); }
+.sig-row .v { color:var(--text); }
+.sig-row .v.g { color:var(--green); }
+.sig-row .v.r { color:var(--red); }
+.sig-row .v.y { color:var(--yellow); }
+.sig-row .v.b { color:#4db8ff; }
 
-/* ── FEATURES ── */
-#features {
-  padding: 100px 48px;
-}
-.features-grid {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  margin-top: 60px;
-}
-.feat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 32px 28px;
-  transition: border-color 0.2s;
-}
-.feat-card:hover { border-color: var(--border2); }
-.feat-icon {
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-.feat-title {
-  font-family: var(--display);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-  margin-bottom: 10px;
-}
-.feat-desc {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-.feat-tags {
-  display:flex; flex-wrap:wrap; gap:6px;
-  margin-top: 16px;
-}
-.feat-tag {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--accent);
-  border: 1px solid rgba(0,212,170,0.2);
-  padding: 3px 8px;
-  border-radius: 2px;
-  letter-spacing: 0.05em;
-}
+.sig-meta { display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:10px; }
+.sig-msg { font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.7; margin-bottom:12px; border-left:1px solid var(--border2); padding-left:10px; }
 
-/* ── STRATEGIES ── */
-#strategies {
-  padding: 100px 48px;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-}
-.strat-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2px;
-  margin-top: 48px;
-}
-.strat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 22px 20px;
-  position:relative;
-  overflow:hidden;
-}
-.strat-card::after {
-  content: attr(data-wr);
-  position:absolute;
-  right: 16px; top: 16px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-}
-.strat-name {
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 6px;
-  letter-spacing: 0.03em;
-}
-.strat-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-.strat-bar-wrap {
-  margin-top: 14px;
-  height: 2px;
-  background: var(--border2);
-  border-radius: 1px;
-  overflow:hidden;
-}
-.strat-bar {
-  height:100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 1px;
-  transition: width 1s ease;
-}
+/* Loading/empty */
+.signals-status { font-family:var(--mono); font-size:12px; color:var(--muted); text-align:center; padding:60px 20px; border:1px dashed var(--border2); letter-spacing:0.05em; }
+.signals-status span { color:var(--accent); }
 
-/* ── MARTINGALE CALC ── */
-#calculator {
-  padding: 100px 48px;
-}
-.calc-grid {
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-top: 48px;
-}
-.calc-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 28px;
-}
-.calc-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  display:block;
-}
-.calc-input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 14px;
-  padding: 12px 16px;
-  border-radius: 2px;
-  outline:none;
-  margin-bottom: 16px;
-  transition: border-color 0.2s;
-}
-.calc-input:focus { border-color: var(--accent); }
-.calc-table {
-  width:100%;
-  border-collapse: collapse;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-.calc-table th {
-  color: var(--muted);
-  font-weight: 400;
-  text-align: left;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  letter-spacing: 0.05em;
-}
-.calc-table td {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-}
-.calc-table td:first-child { color: var(--muted); }
-.calc-table td.amount { color: var(--accent); font-weight: 500; }
-.calc-table td.loss { color: var(--red); }
-.calc-table tr.active-row td { background: rgba(0,212,170,0.05); }
+/* Filter tabs */
+.filter-tabs { display:flex; gap:2px; margin-bottom:16px; }
+.ftab { font-family:var(--mono); font-size:11px; background:var(--surface); border:1px solid var(--border); color:var(--muted); padding:7px 16px; cursor:pointer; border-radius:2px; transition:all 0.15s; letter-spacing:0.05em; }
+.ftab:hover { color:var(--text); border-color:var(--border2); }
+.ftab.active { background:rgba(0,212,170,0.1); border-color:rgba(0,212,170,0.3); color:var(--accent); }
 
-/* ── FOOTER ── */
-footer {
-  padding: 60px 48px;
-  border-top: 1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-}
-.footer-logo {
-  font-family: var(--display);
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-.footer-logo span { color: var(--accent); }
-.footer-disclaimer {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  max-width: 360px;
-  text-align: right;
-  line-height: 1.7;
-  letter-spacing: 0.03em;
-}
+/* FLOW */
+#flow { padding:100px 48px; background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.flow-container { position:relative; overflow-x:auto; }
+.flow-svg-wrap { min-width:900px; }
 
-/* Scrollbar */
+/* FEATURES */
+#features { padding:100px 48px; }
+.features-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:60px; }
+.feat-card { background:var(--surface); border:1px solid var(--border); padding:32px 28px; transition:border-color 0.2s; }
+.feat-card:hover { border-color:var(--border2); }
+.feat-icon { font-size:24px; margin-bottom:16px; }
+.feat-title { font-family:var(--display); font-size:18px; font-weight:700; letter-spacing:-0.3px; margin-bottom:10px; }
+.feat-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+.feat-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:16px; }
+.feat-tag { font-family:var(--mono); font-size:10px; color:var(--accent); border:1px solid rgba(0,212,170,0.2); padding:3px 8px; border-radius:2px; letter-spacing:0.05em; }
+
+/* STRATEGIES */
+#strategies { padding:100px 48px; background:var(--bg2); border-top:1px solid var(--border); }
+.strat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:2px; margin-top:48px; }
+.strat-card { background:var(--surface); border:1px solid var(--border); padding:22px 20px; position:relative; overflow:hidden; }
+.strat-card::after { content:attr(data-wr); position:absolute; right:16px; top:16px; font-family:var(--mono); font-size:11px; color:var(--accent); }
+.strat-name { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--text); margin-bottom:6px; letter-spacing:0.03em; }
+.strat-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+.strat-bar-wrap { margin-top:14px; height:2px; background:var(--border2); border-radius:1px; overflow:hidden; }
+.strat-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:1px; transition:width 1s ease; }
+
+/* CALCULATOR */
+#calculator { padding:100px 48px; }
+.calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:48px; }
+.calc-panel { background:var(--surface); border:1px solid var(--border); padding:28px; }
+.calc-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; display:block; }
+.calc-input { width:100%; background:var(--bg); border:1px solid var(--border2); color:var(--text); font-family:var(--mono); font-size:14px; padding:12px 16px; border-radius:2px; outline:none; margin-bottom:16px; transition:border-color 0.2s; }
+.calc-input:focus { border-color:var(--accent); }
+.calc-table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12px; }
+.calc-table th { color:var(--muted); font-weight:400; text-align:left; padding:8px 0; border-bottom:1px solid var(--border); letter-spacing:0.05em; }
+.calc-table td { padding:10px 0; border-bottom:1px solid var(--border); color:var(--text); }
+.calc-table td:first-child { color:var(--muted); }
+.calc-table td.amount { color:var(--accent); font-weight:500; }
+.calc-table td.loss { color:var(--red); }
+.calc-table tr.active-row td { background:rgba(0,212,170,0.05); }
+
+/* FOOTER */
+footer { padding:60px 48px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; }
+.footer-logo { font-family:var(--display); font-size:32px; font-weight:800; letter-spacing:-1px; }
+.footer-logo span { color:var(--accent); }
+.footer-disclaimer { font-family:var(--mono); font-size:10px; color:var(--muted); max-width:360px; text-align:right; line-height:1.7; letter-spacing:0.03em; }
+
 ::-webkit-scrollbar { width:6px; height:6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">Alpha<span>Bot</span></div>
   <div class="nav-links">
@@ -686,7 +268,6 @@ footer {
     <a href="#signals" class="btn-primary">Canlı Sinyaller</a>
     <a href="#flow" class="btn-secondary">Nasıl Çalışır</a>
   </div>
-
   <div class="hero-stats">
     <div class="hero-stat-item">
       <div class="stat-val" id="heroWR">—</div>
@@ -705,44 +286,33 @@ footer {
 
 <!-- TICKER -->
 <div class="ticker-wrap">
-  <div class="ticker" id="ticker">
-    <!-- JS ile doldurulacak, iki kopya -->
-  </div>
+  <div class="ticker" id="ticker"></div>
 </div>
 
 <!-- LIVE SIGNALS -->
 <section id="signals">
   <div class="section-header">
     <div>
-      <div class="section-eyebrow">Telegram Entegrasyonu</div>
+      <div class="section-eyebrow">AlphaBot Direkt Feed</div>
       <h2 class="section-title">Canlı Sinyaller</h2>
     </div>
-    <a class="tg-badge" id="tgLink" href="#" target="_blank">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21.94 4.37a1.59 1.59 0 0 0-1.63-.22L3.06 10.9a1.6 1.6 0 0 0 .1 2.98l3.72 1.24 1.86 5.59a1.07 1.07 0 0 0 1.87.32l2.6-3.2 4.34 3.22a1.6 1.6 0 0 0 2.49-1L22 5.93a1.6 1.6 0 0 0-.06-.56Z" fill="#4db8ff"/></svg>
-      Telegram Kanalı
-    </a>
+    <div class="live-header-right">
+      <div class="live-dot-badge offline" id="connectionBadge">
+        <span class="dot"></span>
+        <span id="connectionText">Bağlanıyor...</span>
+      </div>
+      <button class="refresh-btn" onclick="loadSignals(true)">↻ Yenile</button>
+    </div>
   </div>
 
-  <!-- Config -->
-  <div class="tg-config" style="grid-template-columns:1fr 1fr auto;">
-    <div>
-      <label>Bot Token</label>
-      <input type="password" id="botToken" placeholder="123456:ABC-DEF..." autocomplete="off">
-    </div>
-    <div>
-      <label>Kanal Chat ID veya @username</label>
-      <input type="text" id="channelName" placeholder="@kanaladınız veya -100xxxxxxxxxx" value="">
-    </div>
-    <button class="btn-fetch" id="fetchBtn" onclick="fetchSignals()">Sinyalleri Çek</button>
-  </div>
-  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:20px;padding:0 2px;display:flex;align-items:center;gap:16px">
-    <span>🤖 Bot'u kanala <strong style="color:var(--text)">Admin</strong> olarak ekleyin · Token tarayıcıda saklanmaz · Otomatik yenileme: 30sn</span>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--accent)">
-      <input type="checkbox" id="autoRefresh" style="accent-color:var(--accent)"> Otomatik Yenile
-    </label>
+  <!-- Info bar -->
+  <div class="signal-info-bar">
+    <span>Bot sinyalleri doğrudan çekiliyor · Her <span>10 saniye</span> otomatik güncellenir</span>
+    <span id="lastUpdateTime" style="color:var(--muted)">—</span>
+    <span class="auto-badge">OTO-YENİLE</span>
   </div>
 
-  <!-- Stats bar -->
+  <!-- Stats -->
   <div class="stats-bar">
     <div class="stat-box">
       <div class="val green" id="statWin">—</div>
@@ -762,14 +332,22 @@ footer {
     </div>
   </div>
 
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <button class="ftab active" onclick="setFilter('all',this)">Tümü</button>
+    <button class="ftab" onclick="setFilter('signal',this)">📊 Sinyaller</button>
+    <button class="ftab" onclick="setFilter('result',this)">🏁 Sonuçlar</button>
+    <button class="ftab" onclick="setFilter('status',this)">⚡ Durum</button>
+  </div>
+
   <div id="signalsContainer">
     <div class="signals-status">
-      Bot token ve Chat ID girerek <span>Telegram sinyallerini</span> çekin<br>
-      <small style="font-size:10px;margin-top:8px;display:block;opacity:0.5">Demo mod: token girmeden örnek verilerle başlayabilirsiniz</small>
+      <span>●</span> Bot sinyalleri bekleniyor...<br>
+      <small style="font-size:10px;margin-top:10px;display:block;opacity:0.5;line-height:1.8">
+        AlphaBot çalışırken sinyaller buraya otomatik akar.<br>
+        Bot kapalıysa demo veriler gösterilir.
+      </small>
     </div>
-  </div>
-  <div style="margin-top:16px;text-align:center">
-    <button class="btn-secondary" style="background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--muted)" onclick="loadDemo()">→ Demo modunu dene</button>
   </div>
 </section>
 
@@ -785,237 +363,58 @@ footer {
     <div class="flow-svg-wrap">
 <svg viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:720px">
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.25)"/>
-    </marker>
-    <marker id="arrG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#00d4aa"/>
-    </marker>
-    <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#ff4757"/>
-    </marker>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.25)"/></marker>
+    <marker id="arrG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00d4aa"/></marker>
+    <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ff4757"/></marker>
   </defs>
-
-  <!-- Background label areas -->
   <rect x="10" y="10" width="200" height="700" rx="4" fill="rgba(0,212,170,0.03)" stroke="rgba(0,212,170,0.08)" stroke-width="1"/>
   <text x="110" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00d4aa" letter-spacing="2" opacity="0.6">VERİ KAYNAĞI</text>
-
   <rect x="220" y="10" width="220" height="700" rx="4" fill="rgba(0,102,255,0.03)" stroke="rgba(0,102,255,0.08)" stroke-width="1"/>
   <text x="330" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#0066ff" letter-spacing="2" opacity="0.6">ANALİZ MOTORU</text>
-
   <rect x="450" y="10" width="220" height="700" rx="4" fill="rgba(255,107,53,0.03)" stroke="rgba(255,107,53,0.08)" stroke-width="1"/>
   <text x="560" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ff6b35" letter-spacing="2" opacity="0.6">KARAR & FİLTRE</text>
-
   <rect x="680" y="10" width="200" height="700" rx="4" fill="rgba(255,211,42,0.03)" stroke="rgba(255,211,42,0.08)" stroke-width="1"/>
   <text x="780" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ffd32a" letter-spacing="2" opacity="0.6">EXECUTION</text>
-
   <rect x="890" y="10" width="200" height="700" rx="4" fill="rgba(255,71,87,0.03)" stroke="rgba(255,71,87,0.08)" stroke-width="1"/>
   <text x="990" y="32" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ff4757" letter-spacing="2" opacity="0.6">ÇIKTI</text>
-
-  <!-- ══ NODES ══ -->
-
-  <!-- MT5 Feed -->
-  <g>
-    <rect x="30" y="55" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
-    <text x="110" y="76" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">MetaTrader 5</text>
-    <text x="110" y="93" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">OHLCV / Tick Verisi</text>
-  </g>
-
-  <!-- Forex Factory -->
-  <g>
-    <rect x="30" y="130" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
-    <text x="110" y="151" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Forex Factory</text>
-    <text x="110" y="168" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">Ekonomik Takvim</text>
-  </g>
-
-  <!-- Crypto Feed -->
-  <g>
-    <rect x="30" y="205" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/>
-    <text x="110" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Crypto Feed</text>
-    <text x="110" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">BTC/ETH vb.</text>
-  </g>
-
-  <!-- ── ANALYSIS ENGINE ── -->
-
-  <!-- Scalp Strategies -->
-  <g>
-    <rect x="240" y="55" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
-    <text x="330" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Scalp Stratejileri</text>
-    <text x="330" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">RSI · EMA · Bollinger · MACD</text>
-    <text x="330" y="100" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stoch · CCI · ATR · Ichimoku</text>
-  </g>
-
-  <!-- Swing Strategies -->
-  <g>
-    <rect x="240" y="130" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
-    <text x="330" y="148" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Swing Stratejileri</text>
-    <text x="330" y="163" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">S/D Zone · Fib · Pattern</text>
-    <text x="330" y="175" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Price Action · SR Seviyeleri</text>
-  </g>
-
-  <!-- AI Engine -->
-  <g>
-    <rect x="240" y="205" width="180" height="50" rx="2" fill="#0d1525" stroke="#7c3aed" stroke-width="1.5"/>
-    <text x="330" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme Motoru</text>
-    <text x="330" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Strateji Ağırlık Optimizasyonu</text>
-  </g>
-
-  <!-- Signal Aggregator -->
-  <g>
-    <rect x="240" y="280" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/>
-    <text x="330" y="300" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Sinyal Birleştirici</text>
-    <text x="330" y="316" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Çoğunluk Oylaması</text>
-    <text x="330" y="328" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlıklı Skor Hesaplama</text>
-  </g>
-
-  <!-- ── DECISION FILTERS ── -->
-
-  <!-- Session Filter -->
-  <g>
-    <rect x="468" y="55" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
-    <text x="560" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Session Filtresi</text>
-    <text x="560" y="89" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">London · NY · Tokyo</text>
-  </g>
-
-  <!-- News Filter -->
-  <g>
-    <rect x="468" y="115" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
-    <text x="560" y="133" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Haber Filtresi</text>
-    <text x="560" y="149" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Yüksek etkili haberler blok</text>
-  </g>
-
-  <!-- Streak Protection -->
-  <g>
-    <rect x="468" y="175" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
-    <text x="560" y="193" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Streak Koruması</text>
-    <text x="560" y="209" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Üst üste kayıp limiti</text>
-  </g>
-
-  <!-- Daily Limit -->
-  <g>
-    <rect x="468" y="235" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
-    <text x="560" y="253" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Günlük Limit</text>
-    <text x="560" y="269" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max kayıp / Kar hedefi</text>
-  </g>
-
-  <!-- Concurrent Check -->
-  <g>
-    <rect x="468" y="295" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/>
-    <text x="560" y="313" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Eşzamanlı Kontrol</text>
-    <text x="560" y="329" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max açık işlem sayısı</text>
-  </g>
-
-  <!-- DECISION diamond -->
-  <g>
-    <polygon points="560,395 620,440 560,485 500,440" fill="#0d1525" stroke="#ffd32a" stroke-width="1.5"/>
-    <text x="560" y="436" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">KARAR</text>
-    <text x="560" y="451" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ffd32a">ONAY?</text>
-    <!-- YES/NO labels -->
-    <text x="640" y="436" font-family="DM Mono,monospace" font-size="9" fill="#00d4aa">EVET</text>
-    <text x="530" y="506" font-family="DM Mono,monospace" font-size="9" fill="#ff4757">HAYIR</text>
-  </g>
-
-  <!-- ── EXECUTION ── -->
-
-  <!-- Martingale -->
-  <g>
-    <rect x="698" y="390" width="165" height="50" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
-    <text x="780" y="411" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Martingale Hesapla</text>
-    <text x="780" y="428" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stake x [1·1.5·3·6.5·13·27]</text>
-    <text x="780" y="440" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Seviye belirle</text>
-  </g>
-
-  <!-- Deriv Execution -->
-  <g>
-    <rect x="698" y="460" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
-    <text x="780" y="478" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Deriv Selenium</text>
-    <text x="780" y="494" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Otomatik işlem girişi</text>
-  </g>
-
-  <!-- MT5 Direct -->
-  <g>
-    <rect x="698" y="520" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/>
-    <text x="780" y="538" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">MT5 Direct Trade</text>
-    <text x="780" y="554" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">SL / TP otomatik</text>
-  </g>
-
-  <!-- ── OUTPUT ── -->
-
-  <!-- Telegram Signal -->
-  <g>
-    <rect x="908" y="390" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/>
-    <text x="990" y="408" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Telegram Sinyali</text>
-    <text x="990" y="424" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Anlık bildirim gönder</text>
-  </g>
-
-  <!-- Result tracking -->
-  <g>
-    <rect x="908" y="450" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/>
-    <text x="990" y="468" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Sonuç Takibi</text>
-    <text x="990" y="484" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">WIN / LOSS kaydı</text>
-  </g>
-
-  <!-- Learning Loop -->
-  <g>
-    <rect x="908" y="510" width="165" height="42" rx="2" fill="#0d1525" stroke="#a78bfa" stroke-width="1.5"/>
-    <text x="990" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme</text>
-    <text x="990" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlık güncelle → loop</text>
-  </g>
-
-  <!-- SKIP (NO branch) -->
-  <g>
-    <rect x="468" y="510" width="185" height="42" rx="2" fill="#111927" stroke="#ff4757" stroke-width="1"/>
-    <text x="560" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff4757" font-weight="500">Sinyal Atla</text>
-    <text x="560" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Cooldown bekleme süresi</text>
-  </g>
-
-  <!-- ══ ARROWS ══ -->
-  <!-- Data → Analysis -->
+  <g><rect x="30" y="55" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/><text x="110" y="76" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">MetaTrader 5</text><text x="110" y="93" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">OHLCV / Tick Verisi</text></g>
+  <g><rect x="30" y="130" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/><text x="110" y="151" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Forex Factory</text><text x="110" y="168" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">Ekonomik Takvim</text></g>
+  <g><rect x="30" y="205" width="160" height="50" rx="2" fill="#111927" stroke="#00d4aa" stroke-width="1"/><text x="110" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#00d4aa" font-weight="500">Crypto Feed</text><text x="110" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5a6a82">BTC/ETH vb.</text></g>
+  <g><rect x="240" y="55" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/><text x="330" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Scalp Stratejileri</text><text x="330" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">RSI · EMA · Bollinger · MACD</text><text x="330" y="100" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stoch · CCI · ATR · Ichimoku</text></g>
+  <g><rect x="240" y="130" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/><text x="330" y="148" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Swing Stratejileri</text><text x="330" y="163" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">S/D Zone · Fib · Pattern</text><text x="330" y="175" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Price Action · SR Seviyeleri</text></g>
+  <g><rect x="240" y="205" width="180" height="50" rx="2" fill="#0d1525" stroke="#7c3aed" stroke-width="1.5"/><text x="330" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme Motoru</text><text x="330" y="243" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Strateji Ağırlık Optimizasyonu</text></g>
+  <g><rect x="240" y="280" width="180" height="50" rx="2" fill="#111927" stroke="#0066ff" stroke-width="1"/><text x="330" y="300" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Sinyal Birleştirici</text><text x="330" y="316" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Çoğunluk Oylaması</text><text x="330" y="328" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlıklı Skor Hesaplama</text></g>
+  <g><rect x="468" y="55" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/><text x="560" y="73" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Session Filtresi</text><text x="560" y="89" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">London · NY · Tokyo</text></g>
+  <g><rect x="468" y="115" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/><text x="560" y="133" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Haber Filtresi</text><text x="560" y="149" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Yüksek etkili haberler blok</text></g>
+  <g><rect x="468" y="175" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/><text x="560" y="193" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Streak Koruması</text><text x="560" y="209" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Üst üste kayıp limiti</text></g>
+  <g><rect x="468" y="235" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/><text x="560" y="253" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Günlük Limit</text><text x="560" y="269" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max kayıp / Kar hedefi</text></g>
+  <g><rect x="468" y="295" width="185" height="42" rx="2" fill="#111927" stroke="#ff6b35" stroke-width="1"/><text x="560" y="313" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff6b35" font-weight="500">Eşzamanlı Kontrol</text><text x="560" y="329" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Max açık işlem sayısı</text></g>
+  <g><polygon points="560,395 620,440 560,485 500,440" fill="#0d1525" stroke="#ffd32a" stroke-width="1.5"/><text x="560" y="436" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">KARAR</text><text x="560" y="451" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ffd32a">ONAY?</text><text x="640" y="436" font-family="DM Mono,monospace" font-size="9" fill="#00d4aa">EVET</text><text x="530" y="506" font-family="DM Mono,monospace" font-size="9" fill="#ff4757">HAYIR</text></g>
+  <g><rect x="698" y="390" width="165" height="50" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/><text x="780" y="411" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Martingale Hesapla</text><text x="780" y="428" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Stake x [1·1.5·3·6.5·13·27]</text></g>
+  <g><rect x="698" y="460" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/><text x="780" y="478" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">Deriv Selenium</text><text x="780" y="494" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Otomatik işlem girişi</text></g>
+  <g><rect x="698" y="520" width="165" height="42" rx="2" fill="#111927" stroke="#ffd32a" stroke-width="1"/><text x="780" y="538" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ffd32a" font-weight="500">MT5 Direct Trade</text><text x="780" y="554" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">SL / TP otomatik</text></g>
+  <g><rect x="908" y="390" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/><text x="990" y="408" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Telegram Sinyali</text><text x="990" y="424" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Anlık bildirim</text></g>
+  <g><rect x="908" y="450" width="165" height="42" rx="2" fill="#111927" stroke="#4db8ff" stroke-width="1"/><text x="990" y="468" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#4db8ff" font-weight="500">Website Feed</text><text x="990" y="484" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">alphha.netlify.app</text></g>
+  <g><rect x="908" y="510" width="165" height="42" rx="2" fill="#0d1525" stroke="#a78bfa" stroke-width="1.5"/><text x="990" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a78bfa" font-weight="500">AI Öğrenme</text><text x="990" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Ağırlık güncelle → loop</text></g>
+  <g><rect x="468" y="510" width="185" height="42" rx="2" fill="#111927" stroke="#ff4757" stroke-width="1"/><text x="560" y="528" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#ff4757" font-weight="500">Sinyal Atla</text><text x="560" y="544" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5a6a82">Cooldown bekleme süresi</text></g>
   <line x1="190" y1="80" x2="238" y2="80" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
   <line x1="190" y1="155" x2="238" y2="155" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
   <line x1="190" y1="230" x2="238" y2="230" stroke="rgba(0,212,170,0.4)" stroke-width="1" marker-end="url(#arrG)"/>
-
-  <!-- Analysis → Aggregator -->
   <line x1="330" y1="105" x2="330" y2="278" stroke="rgba(0,102,255,0.3)" stroke-width="1" marker-end="url(#arr)"/>
   <line x1="350" y1="180" x2="350" y2="278" stroke="rgba(0,102,255,0.3)" stroke-width="1" marker-end="url(#arr)"/>
   <line x1="310" y1="255" x2="310" y2="278" stroke="rgba(122,60,237,0.4)" stroke-width="1" marker-end="url(#arr)"/>
-
-  <!-- Aggregator → Filters (via vertical then horizontal) -->
   <line x1="420" y1="305" x2="466" y2="76" stroke="rgba(0,102,255,0.25)" stroke-width="1" marker-end="url(#arr)" stroke-dasharray="4,3"/>
-
-  <!-- Filters → Decision -->
   <line x1="560" y1="337" x2="560" y2="393" stroke="rgba(255,107,53,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
-
-  <!-- Decision YES → Martingale -->
   <line x1="620" y1="440" x2="696" y2="415" stroke="#00d4aa" stroke-width="1.5" marker-end="url(#arrG)"/>
-
-  <!-- Decision NO → Skip -->
   <line x1="560" y1="485" x2="560" y2="508" stroke="#ff4757" stroke-width="1.5" marker-end="url(#arrR)"/>
-
-  <!-- Martingale → Execution -->
   <line x1="780" y1="440" x2="780" y2="458" stroke="rgba(255,211,42,0.5)" stroke-width="1" marker-end="url(#arr)"/>
   <line x1="780" y1="502" x2="780" y2="518" stroke="rgba(255,211,42,0.5)" stroke-width="1" marker-end="url(#arr)"/>
-
-  <!-- Execution → Output -->
   <line x1="863" y1="415" x2="906" y2="415" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arr)"/>
   <line x1="863" y1="470" x2="906" y2="470" stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arr)"/>
-
-  <!-- Result → Learning -->
   <line x1="990" y1="492" x2="990" y2="508" stroke="rgba(122,60,237,0.5)" stroke-width="1" marker-end="url(#arr)"/>
-
-  <!-- Learning → AI Engine (feedback loop) -->
   <path d="M990,552 Q990,620 330,620 Q330,560 330,332" fill="none" stroke="rgba(122,60,237,0.3)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
-
-  <!-- Cooldown loop back -->
   <path d="M560,552 Q560,600 200,600 Q200,290 238,290" fill="none" stroke="rgba(255,71,87,0.2)" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr)"/>
-
-  <!-- Loop label -->
   <text x="540" y="620" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#a78bfa" opacity="0.6">AI GERİ BESLEMESİ</text>
-  <text x="200" y="615" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#ff4757" opacity="0.4">TEKRAR</text>
 </svg>
     </div>
   </div>
@@ -1026,54 +425,12 @@ footer {
   <div class="section-eyebrow">Özellikler</div>
   <h2 class="section-title">Ne Yapabilir?</h2>
   <div class="features-grid">
-    <div class="feat-card">
-      <div class="feat-icon">⚡</div>
-      <div class="feat-title">Çoklu Strateji Motoru</div>
-      <div class="feat-desc">RSI, EMA, Bollinger Bands, MACD, Ichimoku, Stochastic, CCI, ATR ve daha fazlası eşzamanlı çalışır. Strateji oylaması ile en güçlü sinyal seçilir.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">RSI</span><span class="feat-tag">MACD</span><span class="feat-tag">Ichimoku</span><span class="feat-tag">BB</span><span class="feat-tag">EMA</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🧠</div>
-      <div class="feat-title">AI Öğrenme Motoru</div>
-      <div class="feat-desc">Her 20 işlemde bir otomatik analiz yapar. Düşük performanslı stratejiler kapanır, yüksek win rate'li stratejilerin ağırlığı artırılır.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">Adaptif</span><span class="feat-tag">Ağırlık Opt.</span><span class="feat-tag">GPT Raporu</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📊</div>
-      <div class="feat-title">Martingale Sistemi</div>
-      <div class="feat-desc">6 kademeli akıllı martingale. Kayıp serilerinde stake otomatik güncellenir: 1x → 1.5x → 3x → 6.5x → 13x → 27x çarpanlarıyla.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">6 Kademe</span><span class="feat-tag">Otomatik</span><span class="feat-tag">Ayarlanabilir</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🛡️</div>
-      <div class="feat-title">Risk Yönetimi</div>
-      <div class="feat-desc">Günlük kayıp limiti, günlük kar hedefi, streak koruması ve eşzamanlı işlem sınırı. Hesabınızı korumak için çok katmanlı güvenlik.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">Günlük Limit</span><span class="feat-tag">Streak Guard</span><span class="feat-tag">DD Kontrolü</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📰</div>
-      <div class="feat-title">Haber Filtresi</div>
-      <div class="feat-desc">Forex Factory'den ekonomik takvimi otomatik çeker. Yüksek etkili haberler öncesi ve sonrası belirli dakika işlem durdurulur.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">Forex Factory</span><span class="feat-tag">Otomatik</span><span class="feat-tag">±5dk</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📡</div>
-      <div class="feat-title">Telegram Entegrasyonu</div>
-      <div class="feat-desc">Her sinyal anlık Telegram mesajı olarak gelir. Win/loss sonuçları, günlük PnL özeti ve AI raporları otomatik paylaşılır.</div>
-      <div class="feat-tags">
-        <span class="feat-tag">Anlık Bildirim</span><span class="feat-tag">PnL Raporu</span><span class="feat-tag">AI Analiz</span>
-      </div>
-    </div>
+    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">Çoklu Strateji Motoru</div><div class="feat-desc">RSI, EMA, Bollinger Bands, MACD, Ichimoku, Stochastic, CCI, ATR ve daha fazlası eşzamanlı çalışır. Strateji oylaması ile en güçlü sinyal seçilir.</div><div class="feat-tags"><span class="feat-tag">RSI</span><span class="feat-tag">MACD</span><span class="feat-tag">Ichimoku</span><span class="feat-tag">BB</span><span class="feat-tag">EMA</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🧠</div><div class="feat-title">AI Öğrenme Motoru</div><div class="feat-desc">Her 20 işlemde bir otomatik analiz yapar. Düşük performanslı stratejiler kapanır, yüksek win rate'li stratejilerin ağırlığı artırılır.</div><div class="feat-tags"><span class="feat-tag">Adaptif</span><span class="feat-tag">Ağırlık Opt.</span><span class="feat-tag">GPT Raporu</span></div></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Martingale Sistemi</div><div class="feat-desc">6 kademeli akıllı martingale. Kayıp serilerinde stake otomatik güncellenir: 1x → 1.5x → 3x → 6.5x → 13x → 27x çarpanlarıyla.</div><div class="feat-tags"><span class="feat-tag">6 Kademe</span><span class="feat-tag">Otomatik</span><span class="feat-tag">Ayarlanabilir</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">Risk Yönetimi</div><div class="feat-desc">Günlük kayıp limiti, günlük kar hedefi, streak koruması ve eşzamanlı işlem sınırı. Hesabınızı korumak için çok katmanlı güvenlik.</div><div class="feat-tags"><span class="feat-tag">Günlük Limit</span><span class="feat-tag">Streak Guard</span><span class="feat-tag">DD Kontrolü</span></div></div>
+    <div class="feat-card"><div class="feat-icon">📰</div><div class="feat-title">Haber Filtresi</div><div class="feat-desc">Forex Factory'den ekonomik takvimi otomatik çeker. Yüksek etkili haberler öncesi ve sonrası belirli dakika işlem durdurulur.</div><div class="feat-tags"><span class="feat-tag">Forex Factory</span><span class="feat-tag">Otomatik</span><span class="feat-tag">±5dk</span></div></div>
+    <div class="feat-card"><div class="feat-icon">📡</div><div class="feat-title">Canlı Website Feed</div><div class="feat-desc">Her sinyal anında bu sayfaya yansır. Win/loss sonuçları, günlük PnL özeti ve AI raporları gerçek zamanlı gösterilir.</div><div class="feat-tags"><span class="feat-tag">Anlık Feed</span><span class="feat-tag">PnL Raporu</span><span class="feat-tag">AI Analiz</span></div></div>
   </div>
 </section>
 
@@ -1084,7 +441,7 @@ footer {
   <div class="strat-grid" id="stratGrid"></div>
 </section>
 
-<!-- MARTINGALE CALCULATOR -->
+<!-- CALCULATOR -->
 <section id="calculator">
   <div class="section-eyebrow">İnteraktif Araç</div>
   <h2 class="section-title">Martingale Hesaplayıcı</h2>
@@ -1100,22 +457,13 @@ footer {
     </div>
     <div class="calc-panel">
       <table class="calc-table">
-        <thead>
-          <tr>
-            <th>Kademe</th>
-            <th>Çarpan</th>
-            <th>Stake</th>
-            <th>Kümülatif Kayıp</th>
-            <th>Bu kademede kazanç</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Kademe</th><th>Çarpan</th><th>Stake</th><th>Kümülatif Kayıp</th><th>Kazanç</th></tr></thead>
         <tbody id="calcBody"></tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div>
     <div class="footer-logo">Alpha<span>Bot</span></div>
@@ -1128,391 +476,300 @@ footer {
 </footer>
 
 <script>
-// ── TICKER DATA ──
+// ══ CONFIG ══════════════════════════════════════════════════════
+const API_URL      = "https://alphha.netlify.app/.netlify/functions/signal";
+const POLL_MS      = 10000;   // 10 saniyede bir otomatik yenile
+const MAX_DISPLAY  = 30;      // Gösterilecek max sinyal
+
+// ══ STATE ═══════════════════════════════════════════════════════
+let allSignals   = [];
+let activeFilter = "all";
+let pollTimer    = null;
+let isConnected  = false;
+
+// ══ TICKER ══════════════════════════════════════════════════════
 const pairs = [
-  {sym:'EUR/USD', val:'1.0842', chg:'+0.12%', up:true},
-  {sym:'GBP/USD', val:'1.2714', chg:'-0.08%', up:false},
-  {sym:'USD/JPY', val:'149.23', chg:'+0.31%', up:true},
-  {sym:'AUD/USD', val:'0.6521', chg:'-0.15%', up:false},
-  {sym:'USD/CHF', val:'0.8934', chg:'+0.07%', up:true},
-  {sym:'EUR/GBP', val:'0.8528', chg:'+0.03%', up:true},
-  {sym:'NZD/USD', val:'0.5987', chg:'-0.22%', up:false},
-  {sym:'USD/CAD', val:'1.3612', chg:'+0.11%', up:true},
-  {sym:'BTC/USD', val:'67,240', chg:'+1.84%', up:true},
-  {sym:'ETH/USD', val:'3,512', chg:'+2.10%', up:true},
-  {sym:'XAU/USD', val:'2,318', chg:'-0.34%', up:false},
+  {sym:'EUR/USD',val:'1.0842',chg:'+0.12%',up:true},{sym:'GBP/USD',val:'1.2714',chg:'-0.08%',up:false},
+  {sym:'USD/JPY',val:'149.23',chg:'+0.31%',up:true},{sym:'AUD/USD',val:'0.6521',chg:'-0.15%',up:false},
+  {sym:'USD/CHF',val:'0.8934',chg:'+0.07%',up:true},{sym:'EUR/GBP',val:'0.8528',chg:'+0.03%',up:true},
+  {sym:'BTC/USD',val:'67,240',chg:'+1.84%',up:true},{sym:'ETH/USD',val:'3,512',chg:'+2.10%',up:true},
+  {sym:'XAU/USD',val:'2,318',chg:'-0.34%',up:false},{sym:'NZD/USD',val:'0.5987',chg:'-0.22%',up:false},
 ];
-
-function buildTicker() {
+(function buildTicker(){
   const t = document.getElementById('ticker');
-  const all = [...pairs, ...pairs]; // iki kopya
-  t.innerHTML = all.map(p => `
-    <div class="tick-item">
-      <span class="sym">${p.sym}</span>
-      <span>${p.val}</span>
-      <span class="${p.up?'up':'dn'}">${p.chg}</span>
-    </div>
-  `).join('');
-}
-buildTicker();
+  const all = [...pairs,...pairs];
+  t.innerHTML = all.map(p=>`<div class="tick-item"><span class="sym">${p.sym}</span><span>${p.val}</span><span class="${p.up?'up':'dn'}">${p.chg}</span></div>`).join('');
+})();
 
-// ── STRATEGIES ──
+// ══ STRATEGIES ═════════════════════════════════════════════════
 const strategies = [
-  {name:'rsi_signal',     desc:'RSI aşırı alım/satım bölgeleri', wr:62},
-  {name:'ema_cross',      desc:'Hızlı/yavaş EMA kesişimi', wr:58},
-  {name:'macd_signal',    desc:'MACD histogram divergence', wr:55},
-  {name:'bb_breakout',    desc:'Bollinger Band sıkışma kırılımı', wr:60},
-  {name:'stoch_signal',   desc:'Stochastic %K/%D kesişimi', wr:54},
-  {name:'cci_extreme',    desc:'CCI ±100 seviyeleri', wr:53},
-  {name:'atr_breakout',   desc:'ATR tabanlı volatilite kırılımı', wr:57},
-  {name:'ichimoku_cloud', desc:'Kumo bulut geçişi + TK', wr:61},
-  {name:'sr_bounce',      desc:'S/R seviyelerinden geri dönüş', wr:64},
-  {name:'fib_retracement',desc:'Fibonacci geri çekilme seviyeleri', wr:59},
-  {name:'sd_zone',        desc:'Supply/Demand bölgesi tepkisi', wr:66},
-  {name:'engulf_pattern', desc:'Engulfing mum formasyonu', wr:56},
-  {name:'pin_bar',        desc:'Pin bar ters çevirme sinyali', wr:58},
-  {name:'doji_signal',    desc:'Doji belirsizlik + bağlam', wr:52},
-  {name:'news_trade',     desc:'Yüksek etkili haber işlemi', wr:49},
-  {name:'crypto_loop',    desc:'Kripto teknik tarama döngüsü', wr:55},
-  {name:'scalp_loop',     desc:'Hızlı scalp ana döngüsü', wr:60},
-  {name:'swing_loop',     desc:'Orta vadeli swing ana döngüsü', wr:63},
+  {name:'rsi_signal',desc:'RSI aşırı alım/satım bölgeleri',wr:62},{name:'ema_cross',desc:'Hızlı/yavaş EMA kesişimi',wr:58},
+  {name:'macd_signal',desc:'MACD histogram divergence',wr:55},{name:'bb_breakout',desc:'Bollinger Band sıkışma kırılımı',wr:60},
+  {name:'stoch_signal',desc:'Stochastic %K/%D kesişimi',wr:54},{name:'cci_extreme',desc:'CCI ±100 seviyeleri',wr:53},
+  {name:'atr_breakout',desc:'ATR tabanlı volatilite kırılımı',wr:57},{name:'ichimoku_cloud',desc:'Kumo bulut geçişi + TK',wr:61},
+  {name:'sr_bounce',desc:'S/R seviyelerinden geri dönüş',wr:64},{name:'fib_retracement',desc:'Fibonacci geri çekilme seviyeleri',wr:59},
+  {name:'sd_zone',desc:'Supply/Demand bölgesi tepkisi',wr:66},{name:'engulf_pattern',desc:'Engulfing mum formasyonu',wr:56},
+  {name:'pin_bar',desc:'Pin bar ters çevirme sinyali',wr:58},{name:'doji_signal',desc:'Doji belirsizlik + bağlam',wr:52},
+  {name:'news_trade',desc:'Yüksek etkili haber işlemi',wr:49},{name:'crypto_loop',desc:'Kripto teknik tarama döngüsü',wr:55},
+  {name:'scalp_loop',desc:'Hızlı scalp ana döngüsü',wr:60},{name:'swing_loop',desc:'Orta vadeli swing ana döngüsü',wr:63},
 ];
-
-function buildStrats() {
-  const g = document.getElementById('stratGrid');
-  g.innerHTML = strategies.map(s => `
+(function buildStrats(){
+  document.getElementById('stratGrid').innerHTML = strategies.map(s=>`
     <div class="strat-card" data-wr="${s.wr}%">
       <div class="strat-name">${s.name}</div>
       <div class="strat-desc">${s.desc}</div>
-      <div class="strat-bar-wrap">
-        <div class="strat-bar" style="width:${s.wr}%"></div>
-      </div>
-    </div>
-  `).join('');
-}
-buildStrats();
+      <div class="strat-bar-wrap"><div class="strat-bar" style="width:${s.wr}%"></div></div>
+    </div>`).join('');
+})();
 
-// ── MARTINGALE CALC ──
-const MULTIPLIERS = [1.0, 1.5, 3.0, 6.5, 13.0, 27.0];
-function calcMartingale() {
-  const base = parseFloat(document.getElementById('baseStake').value) || 34;
-  const wr   = parseFloat(document.getElementById('winRate').value) / 100 || 0.58;
-  const stakes = MULTIPLIERS.map(m => Math.max(1, Math.round(base * m)));
-  let cumLoss = 0;
-  let rows = '';
-  for (let i = 0; i < stakes.length; i++) {
-    const stake = stakes[i];
-    const win   = Math.round(stake * 0.8);
-    const prob  = Math.pow(1-wr, i) * wr * 100;
-    rows += `<tr class="${i===0?'active-row':''}">
-      <td>${i+1}</td>
-      <td>${MULTIPLIERS[i]}x</td>
-      <td class="amount">$${stake}</td>
-      <td class="loss">-$${cumLoss}</td>
-      <td style="color:var(--green)">+$${win}</td>
-    </tr>`;
-    cumLoss += stake;
+// ══ MARTINGALE CALC ════════════════════════════════════════════
+const MULTIPLIERS = [1.0,1.5,3.0,6.5,13.0,27.0];
+function calcMartingale(){
+  const base = parseFloat(document.getElementById('baseStake').value)||34;
+  const wr   = parseFloat(document.getElementById('winRate').value)/100||0.58;
+  const stakes = MULTIPLIERS.map(m=>Math.max(1,Math.round(base*m)));
+  let cum=0, rows='';
+  for(let i=0;i<stakes.length;i++){
+    const stake=stakes[i], win=Math.round(stake*0.8);
+    rows+=`<tr class="${i===0?'active-row':''}"><td>${i+1}</td><td>${MULTIPLIERS[i]}x</td><td class="amount">$${stake}</td><td class="loss">-$${cum}</td><td style="color:var(--green)">+$${win}</td></tr>`;
+    cum+=stake;
   }
-  document.getElementById('calcBody').innerHTML = rows;
-  document.getElementById('maxRisk').textContent = `-$${cumLoss}`;
+  document.getElementById('calcBody').innerHTML=rows;
+  document.getElementById('maxRisk').textContent=`-$${cum}`;
 }
 calcMartingale();
 
-// ── TELEGRAM SIGNAL PARSER ──
-function parseSignal(text) {
-  let type = 'info', pair = '', direction = '', extra = '';
-  let price = '', tp1 = '', tp2 = '', sl = '', rsi = '', stoch = '', timeframe = '', score = '', aiDecision = '';
-
-  // ── Yön tespiti (YÖN satırı öncelikli) ──
-  const yonMatch = text.match(/YÖN\s*:\s*(LONG|SHORT|CALL|PUT|BUY|SELL|YUKARI AL|AŞAĞI SAT)/i);
-  if (yonMatch) {
-    const v = yonMatch[1].toUpperCase();
-    if (/LONG|CALL|BUY|YUKARI/.test(v)) { direction = 'LONG'; type = 'buy'; }
-    else                                  { direction = 'SHORT'; type = 'sell'; }
-  } else {
-    // emoji/kelime fallback
-    if (/📈|⬆️|🔼|\blong\b|\bcall\b|\bbuy\b|yukarı al/i.test(text)) { direction = 'LONG';  type = 'buy'; }
-    if (/📉|⬇️|🔽|\bshort\b|\bput\b|\bsell\b|aşağı sat/i.test(text)) { direction = 'SHORT'; type = 'sell'; }
-  }
-
-  // ── Coin/Pair adı — başlık satırından ──
-  // Format: "⚡️📈  Sui  — SCALP"  veya  "BTC — SWING"
-  const titleMatch = text.match(/(?:⚡️|⚡|🔥|💥|🚀)?(?:📈|📉)?\s{0,4}([A-Za-z]{2,10}(?:\/[A-Za-z]{2,6})?)\s{0,4}[—\-–]/);
-  if (titleMatch) {
-    pair = titleMatch[1].toUpperCase();
-  } else {
-    // slash formatı: EUR/USD, BTC/USDT
-    const slashM = text.match(/\b([A-Z]{2,6})\/([A-Z]{2,6})\b/);
-    if (slashM) pair = slashM[0];
-  }
-  if (!pair) pair = 'SİNYAL';
-
-  // ── Strateji türü (SCALP / SWING / SPOT) ──
-  const stratM = text.match(/\b(SCALP(?:ING)?|SWING|SPOT|FUTURES?)\b/i);
-  if (stratM) extra = stratM[1].toUpperCase();
-
-  // ── Fiyat bilgileri ──
-  const priceM = text.match(/FİYAT\s*:\s*\$?([\d.,]+)/i);
-  if (priceM) price = '$' + priceM[1];
-
-  const tp1M = text.match(/TP\s*1\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
-  if (tp1M) tp1 = '$' + tp1M[1] + ' ' + tp1M[2];
-
-  const tp2M = text.match(/TP\s*2\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
-  if (tp2M) tp2 = '$' + tp2M[1] + ' ' + tp2M[2];
-
-  const slM = text.match(/SL\s*:\s*\$?([\d.,]+)\s*\(([^)]+)\)/i);
-  if (slM) sl = '$' + slM[1] + ' ' + slM[2];
-
-  // ── İndikatörler ──
-  const rsiM   = text.match(/RSI\s*:\s*([\d.]+)/i);
-  if (rsiM) rsi = rsiM[1];
-
-  const stochM = text.match(/StochRSI\s*:\s*([\d.]+)/i);
-  if (stochM) stoch = stochM[1];
-
-  const tfM = text.match(/TIMEFRAME\s*:\s*([^\n]+)/i);
-  if (tfM) timeframe = tfM[1].trim();
-
-  const scoreM = text.match(/SİNYAL\s*:\s*(\d+)\/100/i);
-  if (scoreM) score = scoreM[1] + '/100';
-
-  const aiM = text.match(/AI KARAR\s*:\s*([^\n]+)/i);
-  if (aiM) aiDecision = aiM[1].trim();
-
-  return { type, pair, direction, extra, price, tp1, tp2, sl, rsi, stoch, timeframe, score, aiDecision };
+// ══ FILTER ════════════════════════════════════════════════════
+function setFilter(f, btn){
+  activeFilter = f;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSignals(allSignals);
 }
 
-let stats = { win:0, loss:0, total:0 };
-
-function renderSignals(messages) {
-  const container = document.getElementById('signalsContainer');
-  if (!messages || messages.length === 0) {
-    container.innerHTML = '<div class="signals-status">Mesaj bulunamadı. Token ve kanal adını kontrol edin.</div>';
-    return;
+// ══ CONNECTION STATUS ═════════════════════════════════════════
+function setConnected(ok){
+  isConnected = ok;
+  const badge = document.getElementById('connectionBadge');
+  const text  = document.getElementById('connectionText');
+  if(ok){
+    badge.className = 'live-dot-badge';
+    text.textContent = 'Bağlı · Canlı';
+  } else {
+    badge.className = 'live-dot-badge offline';
+    text.textContent = 'Bağlantı yok';
   }
-
-  stats = { win:0, loss:0, total:0 };
-  let cards = '';
-
-  messages.slice().reverse().forEach((m, i) => {
-    const post = m.channel_post || m.message || m;
-    const text = post?.text || post?.caption || '';
-    if (!text || text.length < 5) return;
-    const p = parseSignal(text);
-    stats.total++;
-    if (p.type === 'buy')  stats.win++;
-    if (p.type === 'sell') stats.loss++;
-
-    const date    = new Date((post?.date || 0) * 1000);
-    const timeStr = date.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-    const dateStr = date.toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit'});
-
-    // Detay satırları
-    const rows = [
-      p.price     && `<div class="sig-row"><span>Fiyat</span><span>${p.price}</span></div>`,
-      p.tp1       && `<div class="sig-row"><span>TP 1</span><span style="color:var(--green)">${p.tp1}</span></div>`,
-      p.tp2       && `<div class="sig-row"><span>TP 2</span><span style="color:var(--green)">${p.tp2}</span></div>`,
-      p.sl        && `<div class="sig-row"><span>SL</span><span style="color:var(--red)">${p.sl}</span></div>`,
-      p.timeframe && `<div class="sig-row"><span>Timeframe</span><span>${p.timeframe}</span></div>`,
-      p.rsi       && `<div class="sig-row"><span>RSI</span><span>${p.rsi}</span></div>`,
-      p.stoch     && `<div class="sig-row"><span>StochRSI</span><span>${p.stoch}</span></div>`,
-      p.score     && `<div class="sig-row"><span>Sinyal Gücü</span><span style="color:var(--yellow)">${p.score}</span></div>`,
-      p.aiDecision && `<div class="sig-row"><span>AI Karar</span><span style="color:var(--accent)">${p.aiDecision}</span></div>`,
-    ].filter(Boolean).join('');
-
-    cards += `
-      <div class="signal-card ${p.type}" style="animation-delay:${i*0.04}s">
-        <div class="sig-top">
-          <div class="sig-pair">${p.pair}${p.extra ? `<span style="font-size:10px;font-family:var(--mono);color:var(--muted);font-weight:400;margin-left:8px">${p.extra}</span>` : ''}</div>
-          <span class="sig-dir ${p.type}">${p.direction || 'INFO'}</span>
-        </div>
-        ${rows ? `<div class="sig-details">${rows}</div>` : ''}
-        <div class="sig-meta">
-          <span>${dateStr} ${timeStr}</span>
-          <span style="color:var(--accent);opacity:0.6">#${stats.total}</span>
-        </div>
-      </div>`;
-  });
-
-  container.innerHTML = `<div class="signals-grid">${cards || '<div class="signals-status">Sinyal formatında mesaj bulunamadı</div>'}</div>`;
-
-  const wr = stats.total > 0 ? Math.round((stats.win/stats.total)*100) : 0;
-  document.getElementById('statWin').textContent   = stats.win;
-  document.getElementById('statLoss').textContent  = stats.loss;
-  document.getElementById('statTotal').textContent = stats.total;
-  document.getElementById('statWR').textContent    = wr + '%';
-  document.getElementById('heroWR').textContent    = wr + '%';
 }
 
-// ── STATE ──
-let autoRefreshTimer = null;
-let nextOffset       = 0;      // getUpdates offset — yeni mesajları kaçırmamak için
-let targetChatId     = null;   // doğrulandıktan sonra sabit kalır
-let allMessages      = [];     // biriktirilen tüm mesajlar
-let apiBaseGlobal    = '';
-let initialized      = false;
-
-// ── İLK BAĞLANTI (token + kanal doğrula, webhook sil) ──
-async function fetchSignals() {
-  const token   = document.getElementById('botToken').value.trim();
-  const channel = document.getElementById('channelName').value.trim();
-  const btn     = document.getElementById('fetchBtn');
-
-  if (!token)   { showError('Bot token girin (BotFather\'dan alınan token)'); return; }
-  if (!channel) { showError('Kanal adı veya Chat ID girin'); return; }
-
-  const chatId    = channel.startsWith('-') ? channel : (channel.startsWith('@') ? channel : '@' + channel);
-  const cleanName = channel.replace(/^@/, '');
-  if (!channel.startsWith('-')) document.getElementById('tgLink').href = `https://t.me/${cleanName}`;
-
-  btn.disabled    = true;
-  btn.textContent = 'Bağlanıyor...';
-  setStatus('Telegram Bot API\'ye bağlanılıyor…');
-
+// ══ SIGNAL FETCH ══════════════════════════════════════════════
+async function loadSignals(manual=false){
   try {
-    const apiBase = `https://api.telegram.org/bot${token}`;
-
-    // 1) Webhook varsa sil
-    const whData = await (await fetch(`${apiBase}/getWebhookInfo`)).json();
-    if (whData.ok && whData.result?.url) {
-      setStatus('Webhook siliniyor…');
-      const del = await (await fetch(`${apiBase}/deleteWebhook?drop_pending_updates=false`)).json();
-      if (!del.ok) throw new Error('Webhook silinemedi: ' + del.description);
-    }
-
-    // 2) Kanal doğrula — ID'yi text olarak al (büyük sayı hassasiyet kaybını önlemek için)
-    const chatResp = await fetch(`${apiBase}/getChat?chat_id=${encodeURIComponent(chatId)}`);
-    const chatText = await chatResp.text();
-    const chatData = JSON.parse(chatText);
-    if (!chatData.ok) throw new Error(chatData.description || 'Kanal bulunamadı. Bot kanalın admini mi?');
-
-    // Regex ile ID'yi string olarak çıkar (JSON.parse büyük sayıları bozar)
-    const idMatch = chatText.match(/"id"\s*:\s*(-?\d+)/);
-    const chatIdStr = idMatch ? idMatch[1] : String(chatData.result.id);
-
-    const chatTitle = chatData.result?.title || chatData.result?.username || cleanName;
-    document.getElementById('tgLink').title = chatTitle;
-
-    // 3) State sıfırla
-    apiBaseGlobal = apiBase;
-    targetChatId  = chatIdStr;
-    console.log('[Init] targetChatId =', targetChatId);
-    allMessages   = [];
-    nextOffset    = 0;
-    initialized   = true;
-
-    // 4) Mevcut kuyruktaki mesajları çek (offset=0 → hepsini al)
-    setStatus(`${chatTitle} kanalına bağlandı — mesajlar çekiliyor…`);
-    await pollUpdates();
-
-    // 5) Otomatik yenilemeyi başlat
-    startAutoRefresh();
-
-  } catch (e) {
-    showError(e.message);
-  } finally {
-    btn.disabled    = false;
-    btn.textContent = 'Sinyalleri Çek';
-  }
-}
-
-// ── POLLING: sadece yeni mesajları çeker, biriktirir ──
-async function pollUpdates() {
-  if (!initialized) return;
-
-  const url = `${apiBaseGlobal}/getUpdates?limit=100&offset=${nextOffset}`;
-  const rawText = await (await fetch(url)).text();
-  // Büyük chat ID'leri string'e çevir (JSON number hassasiyet kaybını önle)
-  const safeText = rawText.replace(/"id"\s*:\s*(-?\d{10,})/g, '"id":"$1"');
-  const data = JSON.parse(safeText);
-
-  if (!data.ok) {
-    if (data.description?.includes('webhook')) {
-      await fetch(`${apiBaseGlobal}/deleteWebhook?drop_pending_updates=false`);
-      return;
-    }
-    throw new Error(data.description || 'getUpdates başarısız');
-  }
-
-  const updates = data.result;
-  console.log(`[Poll] ${updates.length} update, offset=${nextOffset}, hedef=${targetChatId}`);
-
-  if (updates.length > 0) {
-    nextOffset = updates[updates.length - 1].update_id + 1;
-
-    const targetIdStr = targetChatId; // zaten String
-    const fresh = updates.filter(u => {
-      const post = u.channel_post || u.message || u.edited_channel_post;
-      if (!post) return false;
-      const match = String(post.chat?.id) === targetIdStr;
-      if (!match) console.log(`[Poll] Eşleşmedi: chat_id=${post.chat?.id}, hedef=${targetIdStr}`);
-      return match;
+    const res  = await fetch(`${API_URL}?limit=${MAX_DISPLAY}`, {
+      headers: { 'Cache-Control': 'no-cache' }
     });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const sigs = json.signals || [];
 
-    console.log(`[Poll] ${fresh.length} sinyal eşleşti`);
+    allSignals = sigs;
+    setConnected(true);
 
-    if (fresh.length > 0) {
-      allMessages = [...allMessages, ...fresh];
-      renderSignals(allMessages);
+    if(sigs.length === 0 && manual){
+      // Bot yeni kurulduysa henüz sinyal gönderilmemiş olabilir
+      showEmpty();
+    } else if(sigs.length === 0){
+      // Otomatik yenilemede boşsa demo göster
+      loadDemo();
+    } else {
+      renderSignals(sigs);
     }
+
+    const now = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('lastUpdateTime').textContent = 'Son güncelleme: ' + now;
+
+  } catch(e) {
+    setConnected(false);
+    if(manual){
+      document.getElementById('signalsContainer').innerHTML = `
+        <div class="signals-status" style="color:var(--red)">
+          ❌ Bağlantı hatası: ${e.message}<br>
+          <small style="font-size:10px;margin-top:8px;display:block;opacity:0.6">
+            Netlify Function kurulumunu kontrol edin.<br>
+            signal.js dosyasının netlify/functions/ klasöründe olduğundan emin olun.
+          </small>
+        </div>`;
+    }
+    // Hata durumunda demo göster
+    if(allSignals.length === 0) loadDemo();
   }
-
-  if (allMessages.length === 0) {
-    setStatus('Bağlantı aktif — yeni sinyal bekleniyor…', 'yellow');
-  }
 }
 
-// ── OTOMATİK YENİLEME (10sn) ──
-function startAutoRefresh() {
-  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-  autoRefreshTimer = setInterval(async () => {
-    try { await pollUpdates(); } catch(e) { console.warn('Poll hatası:', e.message); }
-  }, 10000);
-  // Checkbox kapalıysa durdur
-  const cb = document.getElementById('autoRefresh');
-  if (cb) cb.onchange = () => {
-    if (!cb.checked) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
-    else startAutoRefresh();
-  };
-}
-
-function setStatus(msg, color = 'accent') {
-  document.getElementById('signalsContainer').innerHTML =
-    `<div class="signals-status" style="color:var(--${color})">${msg}</div>`;
-}
-
-function showError(msg) {
+function showEmpty(){
   document.getElementById('signalsContainer').innerHTML = `
-    <div class="signals-status" style="color:var(--red)">
-      ❌ ${msg}<br>
-      <small style="opacity:0.6;font-size:10px;margin-top:10px;display:block;line-height:1.8">
-        <strong>Kontrol listesi:</strong><br>
-        1. BotFather'dan aldığınız token doğru mu?<br>
-        2. Bot kanalınıza <strong>Admin</strong> olarak ekli mi?<br>
-        3. Kanal: @username veya Chat ID: -100xxxxxxxxxx
+    <div class="signals-status">
+      Henüz sinyal gönderilmemiş.<br>
+      <small style="font-size:10px;margin-top:8px;display:block;opacity:0.5;line-height:1.8">
+        AlphaBot çalışmaya başladığında sinyaller otomatik burada görünür.<br>
+        Bot kapalıyken demo moda geçiliyor...
       </small>
     </div>`;
 }
 
-// ── DEMO MODE ──
-function loadDemo() {
-  const demoMessages = [
-    { message: { text: '📈 EUR/USD CALL ✅ | RSI: 28 | BB Alt | EMA Kesişim\nStake: $34 | Süre: 5dk\nStrateji: rsi_signal + bb_breakout', date: Date.now()/1000 - 300 } },
-    { message: { text: '📉 GBP/USD PUT ✅ | MACD Divergence | Stoch: 82\nStake: $34 | Süre: 5dk\nStrateji: macd_signal + stoch_signal', date: Date.now()/1000 - 900 } },
-    { message: { text: '📈 XAU/USD CALL ❌ | Ichimoku Bulut Geçişi\nStake: $51 | Martingale Lvl 2\nSonuç: -$51', date: Date.now()/1000 - 1800 } },
-    { message: { text: '📈 GBP/USD BUY ✅ | SR Bounce + Fib 0.618\nStake: $153 | Martingale Lvl 3\nStrateji: sr_bounce + fib_retracement', date: Date.now()/1000 - 2700 } },
-    { message: { text: '⚠️ Haber Filtresi Aktif — USD NFP verisi 15:30\nİşlem 20 dakika durduruldu', date: Date.now()/1000 - 3600 } },
-    { message: { text: '📉 EUR/GBP SELL ✅ | S/D Zone + Pin Bar\nStake: $34 | Süre: 15dk\nStrateji: sd_zone + pin_bar', date: Date.now()/1000 - 4500 } },
-    { message: { text: '🧠 AI Öğrenme Raporu:\n✅ sd_zone → Ağırlık: 1.4 (↑)\n✅ sr_bounce → Ağırlık: 1.3 (↑)\n❌ doji_signal → Kapatıldı (WR: 41%)', date: Date.now()/1000 - 5400 } },
-    { message: { text: '📈 BTC/USD LONG ✅ | ATR Breakout + BB\nStake: $34 | Kripto Loop\nStrateji: atr_breakout', date: Date.now()/1000 - 6300 } },
-    { message: { text: '📊 Günlük PnL Özeti:\n✅ Kazanç: 6 | ❌ Kayıp: 2\nWin Rate: 75% | Net: +$112\nStreak: 0 | Seviye: 1', date: Date.now()/1000 - 7200 } },
-    { message: { text: '📈 USD/JPY CALL ✅ | EMA 9/21 Cross + RSI 35\nStake: $34 | Süre: 5dk\nStrateji: ema_cross + rsi_signal', date: Date.now()/1000 - 8100 } },
-  ];
-  renderSignals(demoMessages);
+// ══ RENDER ════════════════════════════════════════════════════
+function renderSignals(signals){
+  const container = document.getElementById('signalsContainer');
+
+  // Filtrele
+  let filtered = signals;
+  if(activeFilter !== 'all'){
+    filtered = signals.filter(s => s.event === activeFilter);
+  }
+
+  // İstatistik (tüm sinyallerden)
+  const results = signals.filter(s => s.event === 'result');
+  const wins    = results.filter(s => (s.data?.result||'').toUpperCase() === 'WIN').length;
+  const losses  = results.filter(s => (s.data?.result||'').toUpperCase() === 'LOSS').length;
+  const total   = signals.filter(s => s.event === 'signal').length;
+  const wr      = results.length > 0 ? Math.round(wins/results.length*100) : 0;
+
+  document.getElementById('statWin').textContent   = wins  || '—';
+  document.getElementById('statLoss').textContent  = losses || '—';
+  document.getElementById('statTotal').textContent = total  || '—';
+  document.getElementById('statWR').textContent    = results.length > 0 ? wr+'%' : '—';
+  document.getElementById('heroWR').textContent    = results.length > 0 ? wr+'%' : '—';
+
+  if(filtered.length === 0){
+    container.innerHTML = `<div class="signals-status">Bu kategoride sinyal yok.</div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="signals-grid">${filtered.map((s,i)=>buildCard(s,i)).join('')}</div>`;
 }
 
-window.addEventListener('DOMContentLoaded', () => { loadDemo(); });
+function buildCard(s, idx){
+  const ev   = s.event;
+  const d    = s.data || {};
+  const ts   = s.timestamp || s.receivedAt || '';
+  const time = ts ? new Date(ts).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) : '—';
+  const date = ts ? new Date(ts).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'}) : '';
+
+  // ── SİNYAL kartı ──
+  if(ev === 'signal'){
+    const dir  = (d.direction||'').toUpperCase();
+    const cls  = dir === 'LONG' ? 'buy' : 'sell';
+    const icon = dir === 'LONG' ? '📈' : '📉';
+    const strat = (d.strategy||'—').replace(/_/g,' ').toUpperCase();
+    const rows = [
+      d.entry    && `<div class="sig-row"><span class="k">Giriş</span><span class="v">${fmtPrice(d.entry)}</span></div>`,
+      d.tp1      && `<div class="sig-row"><span class="k">TP 1</span><span class="v g">${fmtPrice(d.tp1)}</span></div>`,
+      d.tp2      && `<div class="sig-row"><span class="k">TP 2</span><span class="v g">${fmtPrice(d.tp2)}</span></div>`,
+      d.sl       && `<div class="sig-row"><span class="k">SL</span><span class="v r">${fmtPrice(d.sl)}</span></div>`,
+      d.stake    && `<div class="sig-row"><span class="k">Stake</span><span class="v y">$${d.stake}</span></div>`,
+      d.ai_conf  && `<div class="sig-row"><span class="k">AI Onay</span><span class="v b">%${d.ai_conf}</span></div>`,
+      d.mode     && `<div class="sig-row"><span class="k">Mod</span><span class="v">${d.mode}</span></div>`,
+    ].filter(Boolean).join('');
+
+    return `
+      <div class="signal-card ${cls}" style="animation-delay:${idx*0.04}s">
+        <div class="sig-top">
+          <div class="sig-pair">${icon} ${d.symbol||'—'}</div>
+          <span class="sig-dir ${cls}">${dir}</span>
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:0.04em">${strat}</div>
+        <div class="sig-rows">${rows}</div>
+        <div class="sig-meta"><span>${date} ${time}</span><span style="color:var(--accent);opacity:0.5">SİNYAL</span></div>
+      </div>`;
+  }
+
+  // ── SONUÇ kartı ──
+  if(ev === 'result'){
+    const isWin = (d.result||'').toUpperCase() === 'WIN';
+    const cls   = isWin ? 'win' : 'loss';
+    const icon  = isWin ? '🏆' : '💔';
+    const pnlStr = d.pnl != null ? (d.pnl >= 0 ? `+$${Math.abs(d.pnl).toFixed(2)}` : `-$${Math.abs(d.pnl).toFixed(2)}`) : '';
+    const rows = [
+      d.entry && `<div class="sig-row"><span class="k">Giriş</span><span class="v">${fmtPrice(d.entry)}</span></div>`,
+      d.exit  && `<div class="sig-row"><span class="k">Çıkış</span><span class="v">${fmtPrice(d.exit)}</span></div>`,
+      d.direction && `<div class="sig-row"><span class="k">Yön</span><span class="v">${d.direction}</span></div>`,
+      pnlStr  && `<div class="sig-row"><span class="k">P&L</span><span class="v ${isWin?'g':'r'}">${pnlStr}</span></div>`,
+    ].filter(Boolean).join('');
+
+    return `
+      <div class="signal-card ${cls}" style="animation-delay:${idx*0.04}s">
+        <div class="sig-top">
+          <div class="sig-pair">${icon} ${d.symbol||'—'}</div>
+          <span class="sig-dir ${cls}">${isWin?'KAZANÇ':'KAYIP'}</span>
+        </div>
+        <div class="sig-rows">${rows}</div>
+        <div class="sig-meta"><span>${date} ${time}</span><span style="opacity:0.5">SONUÇ</span></div>
+      </div>`;
+  }
+
+  // ── DURUM kartı ──
+  if(ev === 'status'){
+    return `
+      <div class="signal-card info" style="animation-delay:${idx*0.04}s">
+        <div class="sig-top">
+          <div class="sig-pair">⚡ Bot Durumu</div>
+          <span class="sig-dir info">${(d.status||'').toUpperCase()}</span>
+        </div>
+        <div class="sig-meta"><span>${date} ${time}</span><span style="opacity:0.5">DURUM</span></div>
+      </div>`;
+  }
+
+  // ── Diğer ──
+  return `
+    <div class="signal-card info" style="animation-delay:${idx*0.04}s">
+      <div class="sig-top">
+        <div class="sig-pair" style="font-size:14px">${ev.toUpperCase()}</div>
+        <span class="sig-dir info">BİLGİ</span>
+      </div>
+      <div class="sig-meta"><span>${date} ${time}</span></div>
+    </div>`;
+}
+
+function fmtPrice(n){
+  if(typeof n !== 'number') return n||'—';
+  return n > 100 ? n.toFixed(2) : n.toFixed(5);
+}
+
+// ══ DEMO DATA ════════════════════════════════════════════════
+function loadDemo(){
+  const now = Date.now();
+  const demoData = [
+    { event:'signal',  timestamp: new Date(now - 2*60000).toISOString(), data:{symbol:'EUR/USD',direction:'LONG', strategy:'rsi_signal+bb_breakout', entry:1.08420, tp1:1.08520, tp2:1.08620, sl:1.08270, stake:34, ai_conf:82, mode:'AUTO'}},
+    { event:'result',  timestamp: new Date(now - 8*60000).toISOString(), data:{symbol:'GBP/USD',direction:'SHORT',result:'WIN',  entry:1.27140, exit:1.26980, pnl:28.9}},
+    { event:'signal',  timestamp: new Date(now -14*60000).toISOString(), data:{symbol:'USD/JPY', direction:'SHORT',strategy:'macd_signal', entry:149.230, tp1:148.930, tp2:148.630, sl:149.530, stake:51, ai_conf:71, mode:'AUTO'}},
+    { event:'result',  timestamp: new Date(now -20*60000).toISOString(), data:{symbol:'USD/JPY', direction:'SHORT',result:'LOSS', entry:149.230, exit:149.450, pnl:-51}},
+    { event:'signal',  timestamp: new Date(now -28*60000).toISOString(), data:{symbol:'XAU/USD', direction:'LONG', strategy:'sr_bounce+fib_retracement', entry:2318.50, tp1:2320.80, tp2:2323.10, sl:2315.20, stake:153, ai_conf:88, mode:'AUTO'}},
+    { event:'result',  timestamp: new Date(now -34*60000).toISOString(), data:{symbol:'XAU/USD', direction:'LONG', result:'WIN',  entry:2318.50, exit:2320.80, pnl:130.1}},
+    { event:'status',  timestamp: new Date(now -60*60000).toISOString(), data:{status:'start'}},
+    { event:'signal',  timestamp: new Date(now -70*60000).toISOString(), data:{symbol:'BTC/USDT',direction:'LONG', strategy:'atr_breakout', entry:67240, tp1:67912, tp2:68584, sl:66568, stake:34, ai_conf:76, mode:'AUTO'}},
+    { event:'result',  timestamp: new Date(now -76*60000).toISOString(), data:{symbol:'BTC/USDT',direction:'LONG', result:'WIN',  entry:67240, exit:67912, pnl:28.9}},
+    { event:'signal',  timestamp: new Date(now -90*60000).toISOString(), data:{symbol:'EUR/GBP', direction:'SHORT',strategy:'sd_zone+pin_bar', entry:0.85280, tp1:0.85080, tp2:0.84880, sl:0.85480, stake:34, ai_conf:79, mode:'AUTO'}},
+  ];
+
+  allSignals = demoData;
+  renderSignals(demoData);
+
+  // Demo badge
+  document.getElementById('connectionBadge').className = 'live-dot-badge offline';
+  document.getElementById('connectionText').textContent = 'Demo Modu';
+  document.getElementById('lastUpdateTime').textContent = 'Bot bağlantısı bekleniyor';
+}
+
+// ══ AUTO POLL ════════════════════════════════════════════════
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(()=> loadSignals(false), POLL_MS);
+}
+
+// ══ INIT ════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  // İlk yükleme: önce API'yi dene, olmazsa demo
+  loadSignals(false);
+  startPolling();
+});
 </script>
 </body>
 </html>
